@@ -13,6 +13,7 @@ class AuthenticatableTest < MiniTest::Spec
     it { Authenticatable.new(User.new({confirmation_token: "yo!"})).confirmable?.must_equal true }
 
 
+    it { Authenticatable.new(User.new({confirmation_token: "yo!"})).confirmable?(nil).must_equal false }
     it { Authenticatable.new(User.new({})).confirmable?("yo!").must_equal false }
     it { Authenticatable.new(User.new({confirmation_token: "yo!"})).confirmable?("yo!").must_equal true }
     # TODO: add expiry.

@@ -22,13 +22,13 @@ module Tyrant
 
       # without token, this decides whether the user model can be activated (e.g. via "set a password").
       # with token, this additionally tests if the token is correct.
-      def confirmable?(token=nil)
+      def confirmable?(token=false)
         persisted_token = auth_meta_data.confirmation_token
 
         # TODO: add expiry etc.
         return false unless (persisted_token.is_a?(String) and persisted_token.size > 0)
 
-        return compare_token(token) if token
+        return compare_token(token) unless token==false
         true
       end
 
