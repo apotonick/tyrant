@@ -18,7 +18,17 @@ class AuthenticatableTest < MiniTest::Spec
     # TODO: add expiry.
   end
 
-  describe "#confirmed?" do
+  describe "#confirmable!" do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.confirmable?.must_equal false
+      auth.confirmable!.must_equal auth
+      auth.confirmable?.must_equal true
+      auth.auth_meta_data.confirmation_token.must_be_kind_of String
+    end
+  end
+
+  describe "#confirmed? / #cofirm!" do
     # blank.
     it { Authenticatable.new(User.new).confirmed?.must_equal false }
     # with token.
@@ -31,6 +41,15 @@ class AuthenticatableTest < MiniTest::Spec
       auth.confirmed?.must_equal true
       # confirmed_at.
       auth.auth_meta_data.confirmed_at.must_be_kind_of DateTime
+    end
+  end
+
+  describe "#confirmation_token" do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.confirmation_token.must_equal nil
+      auth.confirmable!
+      auth.confirmation_token.must_be_kind_of String
     end
   end
 end
