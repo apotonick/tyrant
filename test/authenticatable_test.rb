@@ -36,7 +36,7 @@ class AuthenticatableTest < MiniTest::Spec
 
     it do
       auth = Authenticatable.new(User.new({confirmation_token: "yo!"}))
-      auth.confirm!
+      auth.confirmed!
       # confirmed?
       auth.confirmed?.must_equal true
       # confirmed_at.
@@ -50,6 +50,19 @@ class AuthenticatableTest < MiniTest::Spec
       auth.confirmation_token.must_equal nil
       auth.confirmable!
       auth.confirmation_token.must_be_kind_of String
+    end
+  end
+
+
+  describe "#digest!" do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.digest.must_equal nil
+      auth.digest!("secret: Trailblazer rules!")
+      assert auth.digest == "secret: Trailblazer rules!"
+      auth.digest.must_be_instance_of BCrypt::Password
+
+      # TODO: sync must be called!
     end
   end
 end

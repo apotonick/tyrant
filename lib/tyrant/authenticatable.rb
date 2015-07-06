@@ -10,6 +10,7 @@ module Tyrant
       property :confirmation_token
       property :confirmed_at
       property :confirmation_created_at
+      property :password_digest
     end
 
     module Confirm
@@ -36,7 +37,7 @@ module Tyrant
         not auth_meta_data.confirmed_at.nil?
       end
 
-      def confirm!(confirmed_at=DateTime.now)
+      def confirmed!(confirmed_at=DateTime.now)
         auth_meta_data.confirmation_token = nil
         auth_meta_data.confirmed_at       = confirmed_at # TODO: test optional arg.
       end
@@ -51,6 +52,20 @@ module Tyrant
       end
     end # Confirm
     include Confirm
+
+
+    require "bcrypt"
+    module Digest
+      def digest
+        return unless auth_meta_data.password_digest
+        BCrypt::Password.new(auth_meta_data.password_digest)
+      end
+
+      def digest!(password)
+        auth_meta_data.password_digest = BCrypt::Password.create(password)
+      end
+    end
+    include Digest
 
   end
 end
