@@ -64,6 +64,10 @@ module Tyrant
       def digest!(password)
         auth_meta_data.password_digest = BCrypt::Password.create(password)
       end
+
+      def digest?(password)
+        digest == password
+      end
     end
     include Digest
 
