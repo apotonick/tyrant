@@ -1,4 +1,6 @@
 require "trailblazer/operation"
+require "active_model"
+require "reform/form/active_model/validations" # TODO: this will get replaced with Lotus.
 require "reform/form/validation/unique_validator.rb"
 module Tyrant
   class SignUp < Trailblazer::Operation
@@ -6,6 +8,8 @@ module Tyrant
     model User, :create
 
     contract do
+      include Reform::Form::ActiveModel::Validations
+
       property :email
       property :password, virtual: true
       property :confirm_password, virtual: true
