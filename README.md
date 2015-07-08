@@ -15,7 +15,11 @@ Operations are provided for the following steps.
 
 ## Operations
 
+trb instead of pushing into controller
+
+
 Tyrant exposes its public API using operations.
+
 
 This means you can easily use them in Rails controllers.
 

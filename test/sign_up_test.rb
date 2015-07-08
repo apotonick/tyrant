@@ -19,7 +19,7 @@ end
 class SessionSignUpTest < MiniTest::Spec
   # successful.
   it do
-    res, op = Tyrant::SignUp.run(user: {
+    res, op = Tyrant::SignUp::Confirmed.run(user: {
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "123123",
@@ -35,7 +35,7 @@ class SessionSignUpTest < MiniTest::Spec
 
   # not filled out.
   it do
-    res, op = Tyrant::SignUp.run(user: {
+    res, op = Tyrant::SignUp::Confirmed.run(user: {
       email: "",
       password: "",
       confirm_password: "",
@@ -48,7 +48,7 @@ class SessionSignUpTest < MiniTest::Spec
 
   # password mismatch.
   it do
-    res, op = Tyrant::SignUp.run(user: {
+    res, op = Tyrant::SignUp::Confirmed.run(user: {
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "wrong because drunk",
@@ -61,11 +61,11 @@ class SessionSignUpTest < MiniTest::Spec
 
   # email taken.
   # it do
-  #   Session::SignUp.run(user: {
+  #   Session::SignUp::Confirmed.run(user: {
   #     email: "selectport@trb.org", password: "123123", confirm_password: "123123",
   #   })
 
-  #   res, op = Session::SignUp.run(user: {
+  #   res, op = Session::SignUp::Confirmed.run(user: {
   #     email: "selectport@trb.org",
   #     password: "abcabc",
   #     confirm_password: "abcabc",
