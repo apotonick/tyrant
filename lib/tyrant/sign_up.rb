@@ -4,8 +4,7 @@ require "reform/form/active_model/validations" # TODO: this will get replaced wi
 require "reform/form/validation/unique_validator.rb"
 module Tyrant
   # SignUp will come and implement to-be-confirmed sign up.
-
-  class SignUp
+  class SignUp < Trailblazer::Operation
     class Confirmed < Trailblazer::Operation
       include CRUD
       model User, :create

@@ -5,6 +5,7 @@ Tyrant implements all common steps of authorization workflows using overridable 
 Operations are provided for the following steps.
 
 * SignIn
+  * Confirmed
   * Hammer protection (3x wrong blabla)
   * Sticky (Remember me)
 * SignUp
@@ -19,6 +20,10 @@ trb instead of pushing into controller
 
 
 Tyrant exposes its public API using operations.
+
+Operations are the pivotal element in the [Trailblazer architecture](https://github.com/apotonick/trailblazer). When it comes to customization, Tyrant doesn't rely on a "hopefully complete" configuration language as Devise does it.
+
+Tyrant allows you to customize with Ruby. You can override entire workflow steps (operations), forms and validations (contracts) or methods using simple object-orientation and a clean API.
 
 
 This means you can easily use them in Rails controllers.
