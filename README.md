@@ -55,6 +55,13 @@ Add this line to your application's Gemfile:
 gem 'tyrant'
 ```
 
+## Rails
+
+Tyrant comes with a railtie to provide you an initializer. In Rails, add this to an initializer.
+
+```ruby
+require "tyrant/railtie"
+```
 
 
 ## License
