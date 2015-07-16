@@ -6,3 +6,4 @@ end
 
 require "disposable/twin"
 require "tyrant/authenticatable"
+require "tyrant/session"

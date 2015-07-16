@@ -1,6 +1,7 @@
 require "disposable/twin/struct"
 
 module Tyrant
+  # Encapsulates authentication management logic for a particular user.
   class Authenticatable < Disposable::Twin
     feature Default
     feature Sync # FIXME: really?
