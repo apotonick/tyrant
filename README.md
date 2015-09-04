@@ -1,5 +1,7 @@
 # Tyrant
 
+_"Freedom choked in dread we live, since tyrant was enthroned."_
+
 Tyrant implements all common steps of authorization workflows using overridable _operations_. It allows a quick setup of sign in, sign up, forgot password, etc. Tryrant works well in Rails, but plays well with any Ruby environment.
 
 Operations are provided for the following steps.
