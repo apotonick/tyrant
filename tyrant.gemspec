@@ -24,9 +24,10 @@ Gem::Specification.new do |spec|
 
   spec.add_development_dependency "activemodel"
 
-  spec.add_dependency "trailblazer"
+  spec.add_dependency "trailblazer", "~> 1.0"
   spec.add_dependency "reform", "~> 2.0"
   spec.add_dependency "disposable", ">= 0.1.11"
 
+  spec.add_dependency "warden"
   spec.add_dependency "bcrypt"
 end
