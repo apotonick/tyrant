@@ -18,7 +18,7 @@ Operations are provided for the following steps.
 
 ## Operations
 
-trb instead of pushing into controller
+[Trailblazer](https://github.com/apotonick/trailblazer) instead of pushing into controller
 
 
 Tyrant exposes its public API using operations.
