@@ -43,7 +43,7 @@ You can also run the public API in any other Ruby environment, e.g. a console or
 Tyrant::SignIn.run(params)
 ```
 
-Tyrant provides forms for all workflow steps. using Reform objects that are embedded into the operations.
+Tyrant provides forms for all workflow steps. using [Reform](https://github.com/apotonick/reform) objects that are embedded into the operations.
 
 
 => Customize with inheritance, or override. Or just don't use the operation and write your own "step".
