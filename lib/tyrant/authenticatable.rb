@@ -16,7 +16,7 @@ module Tyrant
 
     module Confirm
       def confirmable!
-        auth_meta_data.confirmation_token = "asdfasdfasfasfasdfasdf"
+        auth_meta_data.confirmation_token = SecureRandom.urlsafe_base64
         auth_meta_data.confirmation_created_at = DateTime.now
         self
       end
