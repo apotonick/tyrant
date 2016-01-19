@@ -1,17 +1,18 @@
 module Tyrant
   class Railtie < Rails::Railtie
-      require "warden"
+    require "warden"
 
-      # DISCUSS: it will be configurable what user class etc. and might be moved to Ops.
-      # DISCUSS: this should actually use Tyrant::Session to log in and out user?
-      config.app_middleware.use Warden::Manager do |config|
-        Warden::Manager.serialize_into_session do |user|
-          user.id
-        end
-
-        Warden::Manager.serialize_from_session do |id|
-          User.find_by(id: id) # Session.sign_in!(user) or something!
-        end
+    # DISCUSS: this should actually use Tyrant::Session to log in and out user?
+    config.app_middleware.use Warden::Manager do |config|
+      Warden::Manager.serialize_into_session do |record|
+        # Complex object should not be stored in session. Only the class name,
+        # that will be use to reconstitute the user, is stored
+        { model: record.class.name, id: record.id }
       end
+
+      Warden::Manager.serialize_from_session do |record|
+        record[:model].constantize.find_by(id: record[:id]) # Session.sign_in!(user) or something!
+      end
+    end
   end
 end
