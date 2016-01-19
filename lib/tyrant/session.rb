@@ -5,20 +5,6 @@ module Tyrant
       @warden = warden
     end
 
-    # def authenticate?(options = {})
-    #   @warden.authenticate?(
-    #     *options[:strategies] || :basic
-    #     scope: options[:scope] || :default
-    #   )
-    # end
-
-    # def authenticate(options = {})
-    #   @warden.authenticate(
-    #     *options[:strategies] || :basic
-    #     scope: options[:scope] || :default
-    #   )
-    # end
-
     def current_user(options = {})
       @warden.user(options[:scope] || :default)
     end
