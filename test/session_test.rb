@@ -1,17 +1,6 @@
 require "test_helper"
 
 class SessionTest < MiniTest::Spec
-  class FakeWarden
-    attr_accessor :user
-    # TODO: replace with real warden.
-    alias_method :set_user, :user=
-    def logout
-      @user = nil
-    end
-  end
-
-  let (:warden) { FakeWarden.new }
-
   it do
     session = Tyrant::Session.new(warden)
 
