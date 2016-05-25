@@ -5,20 +5,22 @@ module Tyrant
       @warden = warden
     end
 
-    def current_user
-      @warden.user
+    def current_user(options = {})
+      @warden.user(options[:scope] || :default)
     end
 
-    def signed_in?
-      @warden.user
+    def signed_in?(options = {})
+      @warden.user(options[:scope] || :default)
     end
 
-    def sign_in!(user)
-      @warden.set_user(user)
+    def sign_in!(user, options = {})
+      @warden.set_user(user, scope: options[:scope] || :default)
     end
 
-    def sign_out!
-      @warden.logout
+    # Sign out the default scope only if not specified.
+    # Warden default behavior is to sign out every user if no scope is passed.
+    def sign_out!(options = {})
+      @warden.logout(options[:scope] || :default)
     end
   end
 end
