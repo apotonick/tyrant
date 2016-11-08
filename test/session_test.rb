@@ -64,6 +64,20 @@ class SessionTest < MiniTest::Spec
     assert ! session.signed_in?(scope: :admin)
   end
 
+  describe "#sign_in!" do
+    it 'passes through options to warden' do
+      test_options = { store: false, scope: :admin }
+      user = Object.new
+      warden = Minitest::Mock.new
+      warden.expect(:set_user, nil [user, test_options])
+
+      session = Tyrant::Session.new(warden)
+      session.sign_in!(user, test_options)
+
+      warden.verify
+    end
+  end
+
   it 'sign out only default user if no scope specified' do
     session = Tyrant::Session.new(warden)
 
