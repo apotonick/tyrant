@@ -11,7 +11,7 @@ module Tyrant
       end
 
       Warden::Manager.serialize_from_session do |record|
-        record[:model].constantize.find_by(id: record[:id]) # Session.sign_in!(user) or something!
+        record['model'].constantize.find_by(id: record[:id]) # Session.sign_in!(user) or something!
       end
     end
   end
