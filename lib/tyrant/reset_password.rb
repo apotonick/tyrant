@@ -16,7 +16,6 @@ module Tyrant
 
   # private
     def new_authentication(model)
-      puts model.inspect
       auth = Tyrant::Authenticatable.new(model)
       auth.digest!(generate_password) # contract.auth_meta_data.password_digest = ..
       auth.confirmed!

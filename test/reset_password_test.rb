@@ -1,6 +1,7 @@
 require "test_helper"
 require "sign_up_test"
 require "tyrant/sign_up"
+require "tyrant"
 
 User = Struct.new(:id, :auth_meta_data, :email) do
   def save
@@ -34,9 +35,10 @@ class ResetPasswordTest < MiniTest::Spec
     reset = Tyrant::ResetPassword.new()
     newModel = reset.new_authentication(op.model)
 
-
+    assert Tyrant::Authenticatable.new(newModel).digest != "123123"
     assert Tyrant::Authenticatable.new(newModel).digest == "NewPassword"
-
+    Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
+    Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
 
   end
   
