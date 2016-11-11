@@ -11,8 +11,21 @@ module Tyrant
       end
 
       Warden::Manager.serialize_from_session do |record|
-        raise record.inspect
-        record[:model].constantize.find_by(id: record[:id]) # Session.sign_in!(user) or something!
+        case record[:model]
+        when nil
+          model = record['model']
+        else          
+          model = record[:model]
+        end
+
+        case record[:id]
+        when nil
+          id = record['id']
+        else          
+          id = record[:id]
+        end
+
+        model.constantize.find_by(id: id) # Session.sign_in!(user) or something!
       end
     end
   end
