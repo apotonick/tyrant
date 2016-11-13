@@ -31,4 +31,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "warden", "1.2.6"
   spec.add_dependency "bcrypt"
+
+  spec.add_dependency "pony"
 end
