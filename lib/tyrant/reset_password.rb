@@ -1,29 +1,32 @@
-require 'securerandom'
 require "trailblazer/operation"
 require "trailblazer/operation/model"
 require "active_model"
 require "reform/form/validate"
 require "reform/form/active_model/validations"
+require 'securerandom'
 require "pony"
 
 module Tyrant
-  class ResetPassword < trailblazer::Operation
+  class ResetPassword < Trailblazer::Operation
     include Model
-    model User, :find
-    
+    model User, :create
+
+    contract do
+      property :user, virtual: true
+    end
+
     def process(params)
-      new_authentication(model)
+      new_authentication(params)
       contract.save
     end
 
   private
-    def new_authentication(model)
-      auth = Tyrant::Authenticatable.new(model)
+    def new_authentication(params)
+      auth = Tyrant::Authenticatable.new(params)
       new_password = generate_password
       auth.digest!(new_password) # contract.auth_meta_data.password_digest = ..
       auth.confirmed!
-      auth.sync
-      # notify_user(model.email, new_password)
+      notify_user(model.email, new_password)
     end
 
     def generate_password
