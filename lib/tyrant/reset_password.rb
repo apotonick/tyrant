@@ -9,7 +9,7 @@ require "pony"
 module Tyrant
   class ResetPassword < Trailblazer::Operation
     include Model
-    model User, :create
+    model User, :find
 
     contract do
       property :user, virtual: true
