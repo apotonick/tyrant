@@ -32,6 +32,12 @@ class ResetPasswordTest < MiniTest::Spec
     Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
     Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
 
+    op = Tyrant::ResetPassword.(op.model)
+
+    op.model.persisted?.must_equal true
+    op.model.email.must_equal "selectport@trb.org"
+
+
     reset = Tyrant::ResetPassword.new()
     newModel = reset.new_authentication(op.model)
 

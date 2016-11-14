@@ -23,7 +23,7 @@ module Tyrant
       auth.digest!(new_password) # contract.auth_meta_data.password_digest = ..
       auth.confirmed!
       auth.sync
-      notify_user(model.email, new_password)
+      # notify_user(model.email, new_password)
     end
 
     def generate_password
