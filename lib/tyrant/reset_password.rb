@@ -8,25 +8,22 @@ require "pony"
 
 module Tyrant
   class ResetPassword < Trailblazer::Operation
-    include Model
-    model User, :find
 
-    contract do
-      property :user, virtual: true
+    def model!(params)
+      params[:model]
     end
 
     def process(params)
-      new_authentication(params)
+      new_authentication
       contract.save
     end
 
   private
-    def new_authentication(params)
-      auth = Tyrant::Authenticatable.new(params)
+    def new_authentication
+      auth = Tyrant::Authenticatable.new(model)
       new_password = generate_password
-      auth.digest!(new_password) # contract.auth_meta_data.password_digest = ..
-      auth.confirmed!
-      notify_user(model.email, new_password)
+      auth.digest!(new_password)
+      # notify_user(model.email, new_password)
     end
 
     def generate_password

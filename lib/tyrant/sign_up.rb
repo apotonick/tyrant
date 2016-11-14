@@ -49,7 +49,6 @@ module Tyrant
       end
 
       def update!
-        puts contract.model
         auth = Tyrant::Authenticatable.new(contract.model)
         auth.digest!(contract.password) # contract.auth_meta_data.password_digest = ..
         auth.confirmed!
