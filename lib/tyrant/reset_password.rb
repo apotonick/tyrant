@@ -15,15 +15,14 @@ module Tyrant
 
     def process(params)
       new_authentication
-      contract.save
+      model.save
     end
 
-  
-  private
     def new_authentication
       auth = Tyrant::Authenticatable.new(model)
       new_password = generate_password
       auth.digest!(new_password)
+      auth.sync
       notify(model.email, new_password)
     end
 

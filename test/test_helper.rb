@@ -12,3 +12,13 @@ class MiniTest::Spec
     Warden.test_reset!
   end
 end
+
+Tyrant::ResetPassword.class_eval do
+  def generate_password
+    return "NewPassword"
+  end
+
+  def notify(email, password)
+    #need to test this better
+  end
+end
