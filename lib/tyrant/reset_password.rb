@@ -1,10 +1,10 @@
-require "trailblazer/operation"
-require "trailblazer/operation/model"
-require "active_model"
-require "reform/form/validate"
-require "reform/form/active_model/validations"
+require 'trailblazer/operation'
+require 'trailblazer/operation/model'
+require 'active_model'
+require 'reform/form/validate'
+require 'reform/form/active_model/validations'
 require 'securerandom'
-require "pony"
+require 'pony'
 
 module Tyrant
   class ResetPassword < Trailblazer::Operation
@@ -18,26 +18,24 @@ module Tyrant
       contract.save
     end
 
+  
   private
     def new_authentication
       auth = Tyrant::Authenticatable.new(model)
       new_password = generate_password
       auth.digest!(new_password)
-      # notify_user(model.email, new_password)
+      notify(model.email, new_password)
     end
 
     def generate_password
-      # return SecureRandom.base64
-      return "NewPassword"
+      return SecureRandom.base64[0,8]
     end
 
-    def notify_user(email, new_password)
-      Tyrant::Mailer.new()
-      Pony.mail({ to: email,
-                  subject: "Reset password for TRB Blog",
-                  body: "Hi there, here your temporary password: #{new_password}. We suggest you to modify this password ASAP. Cheers",
-                })
+    def notify(email, new_password)
+      send_email = Tyrant::Mailer.new()
+      send_email = notify_user(email, new_password)
     end
+
   end
 
   class Mailer 
@@ -49,11 +47,18 @@ module Tyrant
                 port: "587",
                 domain: 'localhost:3000', 
                 enable_starttls_auto: true, 
-                # ssl: true, 
                 user_name: "admin@email.com", 
                 password: "password", 
-                authentication: :login} 
+                subject: "Reset password for your application",
+                authentication: :plain} 
       }
+    end
+    
+    def notify_user(email, new_password)
+      Tyrant::Mailer.new()
+      Pony.mail({ to: email,
+                  body: "Hi there, here your temporary password: #{new_password}. We suggest you to modify this password ASAP. Cheers",
+                })
     end
   end
 end
