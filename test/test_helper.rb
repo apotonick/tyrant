@@ -1,8 +1,6 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'tyrant'
-
 require 'minitest/autorun'
-
 require 'warden'
 
 class MiniTest::Spec
@@ -13,12 +11,17 @@ class MiniTest::Spec
   end
 end
 
-Tyrant::ResetPassword.class_eval do
+#to test that a new password "NewPassword" is actually saved 
+#in the auth_meta_data in User
+Tyrant::ResetPassword.class_eval do 
   def generate_password
     return "NewPassword"
   end
+end
 
-  def notify(email, password)
-    #need to test this better
-  end
+#to test the email notification to the user for the ResetPassword
+Tyrant::Mailer.class_eval do 
+  def email_options
+    Pony.options = {via: :test}
+  end  
 end

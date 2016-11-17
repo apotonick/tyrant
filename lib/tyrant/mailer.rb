@@ -20,13 +20,13 @@ module Tyrant
 
     def process(params)
       validate(params) do
-        pony_options
-        notify_user(params[:email], params[:new_password])
+        email_options #override for Pony/email options 
+        notify_user(params[:email], params[:new_password]) #override to have a cooler email layout
       end
     end
 
   private
-    def pony_options
+    def email_options
       Pony.options = {
                       from: "admin@email.com",
                       via: :smtp, 
@@ -45,7 +45,7 @@ module Tyrant
     
     def notify_user(email, new_password)
       Pony.mail({ to: email,
-                  body: "Hi there, here your temporary password: #{new_password}. We suggest you to modify this password ASAP. Cheers",
+                  body: "Hi there, here is your temporary password: #{new_password}. We suggest you to modify this password ASAP. Cheers",
                 })
     end
   end

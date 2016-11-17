@@ -42,7 +42,9 @@ class ResetPasswordTest < MiniTest::Spec
     Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
     Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
 
+    Mail::TestMailer.deliveries.length.must_equal 1
+    Mail::TestMailer.deliveries.first.to.must_equal ["selectport@trb.org"]
+    Mail::TestMailer.deliveries.first.body.raw_source.must_equal "Hi there, here is your temporary password: NewPassword. We suggest you to modify this password ASAP. Cheers"
   end
-  
 end
 

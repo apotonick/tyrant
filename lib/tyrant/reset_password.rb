@@ -9,7 +9,7 @@ module Tyrant
   class ResetPassword < Trailblazer::Operation
 
     def model!(params)
-      params[:model]
+      params[:model] #inject User model
     end
 
     def process(params)
@@ -23,7 +23,7 @@ module Tyrant
       new_password = generate_password
       auth.digest!(new_password)
       auth.sync
-      Tyrant::Mailer.new(email: model.email, new_password: new_password)
+      Tyrant::Mailer.(email: model.email, new_password: new_password)
     end
 
     def generate_password
