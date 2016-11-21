@@ -51,9 +51,9 @@ Tyrant provides forms for all workflow steps. using [Reform](https://github.com/
 
 ### Reset Password
 
-Run `Tyrant::ResetPassword.(model: your_user_model)` in order to send a random password to the email saved in the `your_user_model`.
+Run `Tyrant::ResetPassword.(model: your_user_model)` after checked that the user exists in your database in order to send a random 8 character password to the email saved in `your_user_model`.
 Override `generate_password` to have a different random password generation:
-```
+```ruby
 Tyrant::ResetPassword.class_eval do 
   def generate_password
     # your code
@@ -62,8 +62,8 @@ end
 ```
 
 The really basic email notification is sent using [Pony](https://github.com/benprew/pony) gem.
-Override `email_options` to send your email and test your code:
-```
+Override `email_options` to set your options and test your code:
+```ruby
 Tyrant::Mailer.class_eval do 
   def email_options
     Pony.options = {via: :test}
@@ -71,8 +71,9 @@ Tyrant::Mailer.class_eval do
 end
 ```
 
-Override `class Tyrant::Mailer` to have a better looking and not only email notification but remember that we love TRB so it must be a TRB::Operation: `Tyrant::Mailer.(email: model.email, new_password: new_password)`. 
+Override `class Tyrant::Mailer` to have a better looking (and not only) email notification but remember that we love TRB so it must be a `TRB::Operation`: `Tyrant::Mailer.(email: model.email, new_password: new_password)`. 
 
+This may be used as Forgot Password as well.
 
 ## Installation
 
