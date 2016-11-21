@@ -1,8 +1,10 @@
 require "trailblazer/operation"
 require "trailblazer/operation/model"
 require "active_model"
-require "reform/form/active_model/validations" # TODO: this will get replaced with Lotus.
-require "reform/form/validation/unique_validator.rb"
+require "reform/form/validate"
+require "reform/form/active_model/validations"
+# require "reform/form/active_model/validations" # TODO: this will get replaced with Lotus.
+# require "reform/form/validation/unique_validator.rb"
 
 
 
