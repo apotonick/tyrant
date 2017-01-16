@@ -1,32 +1,20 @@
 require 'trailblazer/operation'
 require 'trailblazer/operation/model'
+require 'trailblazer/operation/contract'
+require 'trailblazer/operation/validate'
 require 'active_model'
-require 'reform/form/validate'
-require 'reform/form/active_model/validations'
 require 'securerandom'
 require 'pony'
+require 'tyrant/contract/mail'
 
 module Tyrant  
   class Mailer < Trailblazer::Operation
+    step Trailblazer::Operation::Contract::Build(constant: Tyrant::Contract::Mail)
+    step Trailblazer::Operation::Contract::Validate()
+    step :email_options!
+    step :notify_user!
 
-    contract do
-      include Reform::Form::ActiveModel::Validations
-
-      property :email, virtual: true
-      property :new_password, virtual: true
-
-      validates :email, :new_password, presence: true
-    end
-
-    def process(params)
-      validate(params) do
-        email_options #override for Pony/email options 
-        notify_user(params[:email], params[:new_password]) #override to have a cooler email layout
-      end
-    end
-
-  private
-    def email_options
+    def email_options!(options, *)
       Pony.options = {
                       from: "admin@email.com",
                       via: :smtp, 
@@ -43,9 +31,9 @@ module Tyrant
                       }
     end
     
-    def notify_user(email, new_password)
-      Pony.mail({ to: email,
-                  body: "Hi there, here is your temporary password: #{new_password}. We suggest you to modify this password ASAP. Cheers",
+    def notify_user(options, params:, **)
+      Pony.mail({ to: params[:email],
+                  body: "Hi there, here is your temporary password: #{params["new_password"]}. We suggest you to modify this password ASAP. Cheers",
                 })
     end
   end

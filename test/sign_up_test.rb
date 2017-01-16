@@ -19,44 +19,44 @@ end
 class SessionSignUpTest < MiniTest::Spec
   # successful.
   it do
-    res, op = Tyrant::SignUp::Confirmed.run(user: {
+    res = Tyrant::SignUp::Confirmed.(user: {
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "123123",
     })
 
-    op.model.persisted?.must_equal true
-    op.model.email.must_equal "selectport@trb.org"
+    res["model"].persisted?.must_equal true
+    res["model"].email.must_equal "selectport@trb.org"
 
-    assert Tyrant::Authenticatable.new(op.model).digest == "123123"
-    Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
-    Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
+    assert Tyrant::Authenticatable.new(res["model"]).digest == "123123"
+    Tyrant::Authenticatable.new(res["model"]).confirmed?.must_equal true
+    Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
   end
 
   # not filled out.
   it do
-    res, op = Tyrant::SignUp::Confirmed.run(user: {
+    res = Tyrant::SignUp::Confirmed.(user: {
       email: "",
       password: "",
       confirm_password: "",
     })
 
-    res.must_equal false
-    op.model.persisted?.must_equal false
-    op.errors.to_s.must_equal "{:email=>[\"can't be blank\"], :password=>[\"can't be blank\"], :confirm_password=>[\"can't be blank\"]}"
+    res.success?.must_equal false
+    res["model"].persisted?.must_equal false
+    result["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"is missing\"], :password=>[\"is missing\"], :confirm_password=>[\"is missing\"]}"
   end
 
   # password mismatch.
   it do
-    res, op = Tyrant::SignUp::Confirmed.run(user: {
+    res = Tyrant::SignUp::Confirmed.(user: {
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "wrong because drunk",
     })
 
-    res.must_equal false
-    op.model.persisted?.must_equal false
-    op.errors.to_s.must_equal "{:password=>[\"Passwords don't match\"]}"
+    res.success?.must_equal false
+    res["model"].persisted?.must_equal false
+    result["result.contract.default"].errors.messages.inspect.must_equal "{:password=>[\"Passwords don't match\"]}"
   end
 
   # email taken.

@@ -1,58 +1,31 @@
-require "trailblazer/operation"
-require "trailblazer/operation/model"
+require 'trailblazer/operation'
+require 'trailblazer/operation/model'
+require 'trailblazer/operation/contract'
+require 'trailblazer/operation/validate'
+require 'trailblazer/operation/persist'
 require "active_model"
-require "reform/form/validate"
-require "reform/form/active_model/validations"
-# require "reform/form/active_model/validations" # TODO: this will get replaced with Lotus.
-# require "reform/form/validation/unique_validator.rb"
-
-
+require 'tyrant/contract/sign_up'
 
 module Tyrant
   # SignUp will come and implement to-be-confirmed sign up.
   class SignUp < Trailblazer::Operation
     class Confirmed < Trailblazer::Operation
-      include Model
-      model User, :create
+      step :model!
+      step Trailblazer::Operation::Contract::Build(constant: ::Tyrant::Contract::SignUp)
+      step Trailblazer::Operation::Contract::Validate()
+      step :update!
+      step Trailblazer::Operation::Contract::Persist(method: :sync)
 
-      contract do
-        include Reform::Form::ActiveModel::Validations
-
-        property :email
-        property :password, virtual: true
-        property :confirm_password, virtual: true
-
-        validates :email, :password, :confirm_password, presence: true
-        # validates :email, email: true, unique: true
-        validate :password_ok?
-
-      private
-        # TODO: more, like minimum 6 chars, etc.
-        def password_ok?
-          return unless email and password
-          errors.add(:password, "Passwords don't match") if password != confirm_password
-        end
+      def model!(options, *)
+        options["model"] = User.new
       end
 
-
-      # sucessful signup:
-      # * hash password, set confirmed
-      # * hash password, set unconfirmed with token etc.
-
-      # * no password, unconfirmed, needs password.
-      def process(params)
-        validate(params[:user]) do |contract|
-          update!
-
-          contract.save # save User with email.
-        end
-      end
-
-      def update!
-        auth = Tyrant::Authenticatable.new(contract.model)
-        auth.digest!(contract.password) # contract.auth_meta_data.password_digest = ..
+      def update!(options, *)
+        auth = Tyrant::Authenticatable.new(options["model"])
+        auth.digest!(options["model"].password) # contract.auth_meta_data.password_digest = ..
         auth.confirmed!
         auth.sync
+        model.save
       end
     end
   end
