@@ -10,15 +10,11 @@ module Tyrant
   # SignUp will come and implement to-be-confirmed sign up.
   class SignUp < Trailblazer::Operation
     class Confirmed < Trailblazer::Operation
-      step :model!
+      step Model(User, :new)
       step Trailblazer::Operation::Contract::Build(constant: ::Tyrant::Contract::SignUp)
       step Trailblazer::Operation::Contract::Validate()
       step :update!
       step Trailblazer::Operation::Contract::Persist(method: :sync)
-
-      def model!(options, *)
-        options["model"] = User.new
-      end
 
       def update!(options, params:, model:, **)
         auth = Tyrant::Authenticatable.new(model)
