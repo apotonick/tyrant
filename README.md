@@ -41,7 +41,7 @@ class SessionController < ApplicationController
 You can also run the public API in any other Ruby environment, e.g. a console or a Roda action.
 
 ```ruby
-Tyrant::SignIn.run(params)
+Tyrant::SignIn.(params)
 ```
 
 Tyrant provides forms for all workflow steps. using [Reform](https://github.com/apotonick/reform) objects that are embedded into the operations.
@@ -55,7 +55,7 @@ Run `Tyrant::ResetPassword.(model: your_user_model)` after checked that the user
 Override `generate_password` to have a different random password generation:
 ```ruby
 Tyrant::ResetPassword.class_eval do 
-  def generate_password
+  def generate_password(options, *)
     # your code
   end
 end
@@ -65,7 +65,7 @@ The really basic email notification is sent using [Pony](https://github.com/benp
 Override `email_options` to set your options and test your code:
 ```ruby
 Tyrant::Mailer.class_eval do 
-  def email_options
+  def email_options!(options, *)
     Pony.options = {via: :test}
   end  
 end
