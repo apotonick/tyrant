@@ -12,7 +12,7 @@ module Tyrant
     step Trailblazer::Operation::Contract::Build(constant: Tyrant::Contract::Mail)
     step Trailblazer::Operation::Contract::Validate()
     step :email_options!
-    step :notify_user!
+    step :send_email!
 
     def email_options!(options, *)
       Pony.options = {
@@ -31,9 +31,9 @@ module Tyrant
                       }
     end
     
-    def notify_user(options, params:, **)
+    def send_email!(options, params:, **)
       Pony.mail({ to: params[:email],
-                  body: "Hi there, here is your temporary password: #{params["new_password"]}. We suggest you to modify this password ASAP. Cheers",
+                  body: "Hi there, here is your temporary password: #{params[:new_password]}. We suggest you to modify this password ASAP. Cheers",
                 })
     end
   end

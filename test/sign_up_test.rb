@@ -19,13 +19,12 @@ end
 class SessionSignUpTest < MiniTest::Spec
   # successful.
   it do
-    res = Tyrant::SignUp::Confirmed.(user: {
+    res = Tyrant::SignUp::Confirmed.(
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "123123",
-    })
-
-    res["model"].persisted?.must_equal true
+    )
+    res.success?.must_equal true
     res["model"].email.must_equal "selectport@trb.org"
 
     assert Tyrant::Authenticatable.new(res["model"]).digest == "123123"
@@ -35,28 +34,26 @@ class SessionSignUpTest < MiniTest::Spec
 
   # not filled out.
   it do
-    res = Tyrant::SignUp::Confirmed.(user: {
+    res = Tyrant::SignUp::Confirmed.(
       email: "",
       password: "",
       confirm_password: "",
-    })
+    )
 
-    res.success?.must_equal false
-    res["model"].persisted?.must_equal false
-    result["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"is missing\"], :password=>[\"is missing\"], :confirm_password=>[\"is missing\"]}"
+    res.failure?.must_equal true
+    res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"must be filled\"], :password=>[\"must be filled\"], :confirm_password=>[\"must be filled\"]}"
   end
 
   # password mismatch.
   it do
-    res = Tyrant::SignUp::Confirmed.(user: {
+    res = Tyrant::SignUp::Confirmed.(
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "wrong because drunk",
-    })
+    )
 
-    res.success?.must_equal false
-    res["model"].persisted?.must_equal false
-    result["result.contract.default"].errors.messages.inspect.must_equal "{:password=>[\"Passwords don't match\"]}"
+    res.failure?.must_equal true
+    res["result.contract.default"].errors.messages.inspect.must_equal "{:confirm_password=>[\"Passwords don't match\"]}"
   end
 
   # email taken.

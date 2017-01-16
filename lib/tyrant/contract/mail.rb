@@ -8,7 +8,7 @@ module Tyrant::Contract
     property :email, virtual: true
     property :new_password, virtual: true
 
-    validate do
+    validation do
       required(:email).filled
       required(:new_password).filled
     end

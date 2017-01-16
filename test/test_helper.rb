@@ -14,14 +14,14 @@ end
 #to test that a new password "NewPassword" is actually saved 
 #in the auth_meta_data in User
 Tyrant::ResetPassword.class_eval do 
-  def generate_password
-    return "NewPassword"
+  def generate_password!(options, *)
+    options["new_password"] = "NewPassword"
   end
 end
 
 #to test the email notification to the user for the ResetPassword
 Tyrant::Mailer.class_eval do 
-  def email_options
+  def email_options!(options, *)
     Pony.options = {via: :test}
   end  
 end

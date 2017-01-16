@@ -11,12 +11,13 @@ module Tyrant::Contract
     validation do
       configure do
         option :form
-        config.messages_file = 'tyrant/config/error_messages.yml'
+        config.messages_file = 'lib/config/error_messages.yml'
 
         def password_ok?
-          if form.password == form.confirm_password
+          return form.password == form.confirm_password
         end
       end
+      
       required(:email).filled
       required(:password).filled
       required(:confirm_password).filled

@@ -19,28 +19,28 @@ end
 
 class ResetPasswordTest < MiniTest::Spec
   it do
-    res, op = Tyrant::SignUp::Confirmed.run(user: {
+    res = Tyrant::SignUp::Confirmed.(
       email: "selectport@trb.org",
       password: "123123",
       confirm_password: "123123",
-    })
+    )
 
-    op.model.persisted?.must_equal true
-    op.model.email.must_equal "selectport@trb.org"
+    res.success?.must_equal true
+    res["model"].email.must_equal "selectport@trb.org"
 
-    assert Tyrant::Authenticatable.new(op.model).digest == "123123"
-    Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
-    Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
+    assert Tyrant::Authenticatable.new(res["model"]).digest == "123123"
+    Tyrant::Authenticatable.new(res["model"]).confirmed?.must_equal true
+    Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
 
-    op = Tyrant::ResetPassword.(model: op.model)
+    res = Tyrant::ResetPassword.(model: res["model"])
 
-    op.model.persisted?.must_equal true
-    op.model.email.must_equal "selectport@trb.org"
+    res.success?.must_equal true
+    res["model"].email.must_equal "selectport@trb.org"
 
-    assert Tyrant::Authenticatable.new(op.model).digest != "123123"
-    assert Tyrant::Authenticatable.new(op.model).digest == "NewPassword"
-    Tyrant::Authenticatable.new(op.model).confirmed?.must_equal true
-    Tyrant::Authenticatable.new(op.model).confirmable?.must_equal false
+    assert Tyrant::Authenticatable.new(res["model"]).digest != "123123"
+    assert Tyrant::Authenticatable.new(res["model"]).digest == "NewPassword"
+    Tyrant::Authenticatable.new(res["model"]).confirmed?.must_equal true
+    Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
 
     Mail::TestMailer.deliveries.length.must_equal 1
     Mail::TestMailer.deliveries.first.to.must_equal ["selectport@trb.org"]

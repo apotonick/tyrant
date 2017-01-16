@@ -20,9 +20,9 @@ module Tyrant
         options["model"] = User.new
       end
 
-      def update!(options, *)
-        auth = Tyrant::Authenticatable.new(options["model"])
-        auth.digest!(options["model"].password) # contract.auth_meta_data.password_digest = ..
+      def update!(options, params:, model:, **)
+        auth = Tyrant::Authenticatable.new(model)
+        auth.digest!(params[:password]) # contract.auth_meta_data.password_digest = ..
         auth.confirmed!
         auth.sync
         model.save
