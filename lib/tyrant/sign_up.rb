@@ -13,8 +13,8 @@ module Tyrant
       step Model(User, :new)
       step Trailblazer::Operation::Contract::Build(constant: ::Tyrant::Contract::SignUp)
       step Trailblazer::Operation::Contract::Validate()
+      step Trailblazer::Operation::Contract::Persist()
       step :update!
-      step Trailblazer::Operation::Contract::Persist(method: :sync)
 
       def update!(options, params:, model:, **)
         auth = Tyrant::Authenticatable.new(model)

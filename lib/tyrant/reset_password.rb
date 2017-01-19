@@ -26,7 +26,7 @@ module Tyrant
     end
 
     def notify_user!(options, model:, new_password:, **)
-      Tyrant::Mailer.(email: model.email, new_password: new_password)
+      Tyrant::Mailer.({email: model.email, new_password: new_password})
     end
   end
 end
