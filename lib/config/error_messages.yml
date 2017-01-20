@@ -1,0 +1,3 @@
+en:
+  errors:
+    password_ok?: "Passwords don't match"

@@ -41,7 +41,7 @@ class SessionController < ApplicationController
 You can also run the public API in any other Ruby environment, e.g. a console or a Roda action.
 
 ```ruby
-Tyrant::SignIn.run(params)
+Tyrant::SignIn.(params)
 ```
 
 Tyrant provides forms for all workflow steps. using [Reform](https://github.com/apotonick/reform) objects that are embedded into the operations.
@@ -49,6 +49,32 @@ Tyrant provides forms for all workflow steps. using [Reform](https://github.com/
 
 => Customize with inheritance, or override. Or just don't use the operation and write your own "step".
 
+### Reset Password
+
+Run `Tyrant::ResetPassword.({model: your_user_model})` after checked that the user exists in your database in order to send a random 8 character password to the email saved in `your_user_model`.
+Override `generate_password` to have a different random password generation:
+```ruby
+Tyrant::ResetPassword.class_eval do 
+  def generate_password!(options, *)
+    # your code
+  end
+end
+```
+Otherwise simply replace the `generate_password!` step in `Tyrant::ResetPassword`.
+
+The really basic email notification is sent using [Pony](https://github.com/benprew/pony) gem.
+Replace the step or override `email_options` to set your options and test your code:
+```ruby
+Tyrant::Mailer.class_eval do 
+  def email_options!(options, *)
+    Pony.options = {via: :test}
+  end  
+end
+```
+
+Replace the step or override `class Tyrant::Mailer` to have a better looking (and not only) email notification but remember that we love TRB so it must be a `TRB::Operation`: `Tyrant::Mailer.({email: model.email, new_password: new_password})`.
+
+This may be used as `Forgot Password` as well.
 
 ## Installation
 
