@@ -71,6 +71,5 @@ module Tyrant
       end
     end
     include Digest
-    
   end
 end
