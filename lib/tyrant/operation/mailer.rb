@@ -1,9 +1,3 @@
-require 'trailblazer/operation'
-require 'trailblazer/operation/model'
-require 'trailblazer/operation/contract'
-require 'trailblazer/operation/validate'
-require 'active_model'
-require 'securerandom'
 require 'pony'
 require 'tyrant/contract/mail'
 
@@ -14,10 +8,10 @@ module Tyrant
     step :email_options!
     step :send_email!
 
-    def email_options!(options, *)
+    def email_options!(options, via: :smtp, **)
       Pony.options = {
                       from: "admin@email.com",
-                      via: :smtp, 
+                      via: via, 
                       via_options: {
                                     address: "smtp.gmail.com", 
                                     port: "587",

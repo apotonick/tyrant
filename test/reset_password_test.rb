@@ -32,7 +32,9 @@ class ResetPasswordTest < MiniTest::Spec
     Tyrant::Authenticatable.new(res["model"]).confirmed?.must_equal true
     Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
 
-    res = Tyrant::ResetPassword.({model: res["model"]})
+    new_password = -> { "NewPassword" }
+
+    res = Tyrant::ResetPassword.({}, "model" => res["model"], "generator" => new_password, "via" => :test)
 
     res.success?.must_equal true
     res["model"].email.must_equal "selectport@trb.org"
