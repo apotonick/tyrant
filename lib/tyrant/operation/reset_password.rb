@@ -1,7 +1,7 @@
 require 'trailblazer/operation'
 require 'trailblazer/operation/model'
 require 'active_model'
-require 'tyrant/mailer'
+require 'tyrant/operation/mailer'
 
 module Tyrant
   class ResetPassword < Trailblazer::Operation

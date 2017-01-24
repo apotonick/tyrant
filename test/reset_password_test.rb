@@ -1,6 +1,6 @@
 require "test_helper"
 require "sign_up_test"
-require "tyrant/sign_up"
+require "tyrant/operation/sign_up"
 require "tyrant"
 
 User = Struct.new(:id, :auth_meta_data, :email) do

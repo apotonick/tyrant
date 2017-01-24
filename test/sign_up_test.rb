@@ -9,7 +9,7 @@ User = Struct.new(:id, :auth_meta_data, :email) do
   end
 end
 
-require "tyrant/sign_up"
+require "tyrant/operation/sign_up"
 
 class SignUpConfirmedTest < MiniTest::Spec
   Authenticatable = Tyrant::Authenticatable
