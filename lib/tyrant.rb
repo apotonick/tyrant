@@ -7,4 +7,4 @@ end
 require "disposable/twin"
 require "tyrant/authenticatable"
 require "tyrant/session"
-require "tyrant/reset_password"
+require "tyrant/operation/reset_password"
