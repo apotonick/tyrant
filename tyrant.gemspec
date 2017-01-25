@@ -34,4 +34,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "pony"
   spec.add_dependency "dry-validation"
+  spec.add_dependency "formular"
 end

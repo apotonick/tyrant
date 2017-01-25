@@ -1,9 +1,4 @@
-require 'trailblazer/operation'
-require 'trailblazer/operation/model'
-require 'trailblazer/operation/contract'
-require 'trailblazer/operation/validate'
-require 'trailblazer/operation/persist'
-require "active_model"
+require 'trailblazer'
 require 'tyrant/contract/sign_up'
 
 module Tyrant

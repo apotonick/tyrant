@@ -1,3 +1,4 @@
 en:
   errors:
     password_ok?: "Passwords don't match"
+    user_exists?: "User not found"
