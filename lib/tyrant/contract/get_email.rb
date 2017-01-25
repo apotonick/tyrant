@@ -10,10 +10,10 @@ module Tyrant::Contract
     validation do
       configure do
         option :form
-        config.messages_file = 'lib/config/error_messages.yml'
+        config.messages_file = '/home/emamaglio/projects/tyrant/lib/config/error_messages.yml'
 
         def user_exists?
-          return User.where(email: form.email).size == 1
+          return User.find_by(email: form.email) != nil
         end
       end
       required(:email).filled

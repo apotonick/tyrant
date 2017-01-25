@@ -12,11 +12,6 @@ User = Struct.new(:id, :auth_meta_data, :email) do
   end
 end
 
-class SignUpConfirmedTest < MiniTest::Spec
-  Authenticatable = Tyrant::Authenticatable
-  User = Struct.new(:auth_meta_data)
-end
-
 class ResetPasswordTest < MiniTest::Spec
   it do
     res = Tyrant::SignUp::Confirmed.(
@@ -34,7 +29,7 @@ class ResetPasswordTest < MiniTest::Spec
 
     new_password = -> { "NewPassword" }
 
-    res = Tyrant::ResetPassword.({}, "model" => res["model"], "generator" => new_password, "via" => :test)
+    res = Tyrant::ResetPassword.({email: "selectport@trb.org"}, "generator" => new_password, "via" => :test)
 
     res.success?.must_equal true
     res["model"].email.must_equal "selectport@trb.org"

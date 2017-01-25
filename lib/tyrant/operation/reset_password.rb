@@ -6,13 +6,17 @@ module Tyrant
   class ResetPassword < Trailblazer::Operation
     step Nested(Tyrant::GetEmail)
     step Trailblazer::Operation::Contract::Validate()
+    failure :show_errors!, fails_fast: true
     step :model!
     step :generate_password!
     step :new_authentication!
     step :notify_user!
 
-    def model!(options, params:, **)
-      options["model"] = User.find_by(email: params[:email])
+    def show_errors!(options, *)
+    end
+
+    def model!(options, params:, user: GetUser, **)
+      options["model"] = user
     end
 
     def generate_password!(options, generator: PasswordGenerator,  **)
@@ -31,6 +35,7 @@ module Tyrant
     end
 
     PasswordGenerator = -> { SecureRandom.base64[0,8] }
+    GetUser = -> { User.find_by(email: params[:email]) }
 
   end
 end
