@@ -1,4 +1,4 @@
-require 'reform/form/dry'
+require 'reform'
 
 module Tyrant::Contract
   class SignUp < Reform::Form

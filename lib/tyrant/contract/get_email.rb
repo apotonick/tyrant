@@ -18,7 +18,7 @@ module Tyrant::Contract
       end
       required(:email).filled
 
-      validate(:user_exists? :email) do
+      validate(user_exists?: :email) do
         user_exists?
       end
     end
