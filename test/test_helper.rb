@@ -2,6 +2,8 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'tyrant'
 require 'minitest/autorun'
 require 'warden'
+require 'active_record'
+require 'trailblazer/operation'
 
 class MiniTest::Spec
   include Warden::Test::Mock
@@ -11,17 +13,18 @@ class MiniTest::Spec
   end
 end
 
-#to test that a new password "NewPassword" is actually saved 
-#in the auth_meta_data in User
-# Tyrant::ResetPassword.class_eval do 
-#   def generate_password!(options, *)
-#     options["new_password"] = "NewPassword"
-#   end
-# end
+ActiveRecord::Base.establish_connection(
+  adapter:  'sqlite3',
+  database: 'db.sqlite3',
+)
 
-#to test the email notification to the user for the ResetPassword
-# Tyrant::Mailer.class_eval do 
-#   def email_options!(options, *)
-#     Pony.options = {via: :test}
-#   end  
-# end
+ActiveRecord::Schema.define do
+  create_table :users, force: true do |t|
+    t.string :email
+    t.text   :auth_meta_data
+  end
+end
+
+class User < ActiveRecord::Base
+  serialize :auth_meta_data
+end

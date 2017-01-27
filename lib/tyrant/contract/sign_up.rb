@@ -13,14 +13,26 @@ module Tyrant::Contract
         option :form
         config.messages_file = 'lib/config/error_messages.yml'
 
+        def unique_email?
+          User.where("email = ?", form.email).size == 0
+        end
+
+        def email?
+          ! /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.match(form.email).nil?
+        end
+
         def password_ok?
           return form.password == form.confirm_password
         end
       end
       
-      required(:email).filled
+      required(:email).filled(:email?)
       required(:password).filled
       required(:confirm_password).filled
+
+      validate(unique_email?: :email) do
+        unique_email?
+      end
 
       validate(password_ok?: :confirm_password) do
         password_ok?

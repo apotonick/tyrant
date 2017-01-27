@@ -1,3 +1,4 @@
+require 'trailblazer'
 require 'tyrant/contract/change_password'
 
 class Tyrant::GetNewPassword < Trailblazer::Operation

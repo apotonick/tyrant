@@ -1,29 +1,11 @@
 require "test_helper"
-
-User = Struct.new(:id, :auth_meta_data, :email) do
-  def save
-    @saved = true
-  end
-  def persisted?
-    @saved or false
-  end
-end
-
 require "tyrant/operation/sign_up"
 
-class SignUpConfirmedTest < MiniTest::Spec
-  Authenticatable = Tyrant::Authenticatable
-  User = Struct.new(:auth_meta_data)
-end
 
 class SessionSignUpTest < MiniTest::Spec
-  # successful.
-  it do
-    res = Tyrant::SignUp::Confirmed.(
-      email: "selectport@trb.org",
-      password: "123123",
-      confirm_password: "123123",
-    )
+  it 'signup successfully' do
+    res = Tyrant::SignUp::Confirmed.(email: "selectport@trb.org", password: "123123", confirm_password: "123123")
+
     res.success?.must_equal true
     res["model"].email.must_equal "selectport@trb.org"
 
@@ -32,44 +14,30 @@ class SessionSignUpTest < MiniTest::Spec
     Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
   end
 
-  # not filled out.
-  it do
-    res = Tyrant::SignUp::Confirmed.(
-      email: "",
-      password: "",
-      confirm_password: "",
-    )
+  it "not filled out" do
+    res = Tyrant::SignUp::Confirmed.(email: "", password: "", confirm_password: "")
 
     res.failure?.must_equal true
     res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"must be filled\"], :password=>[\"must be filled\"], :confirm_password=>[\"must be filled\"]}"
   end
 
-  # password mismatch.
-  it do
-    res = Tyrant::SignUp::Confirmed.(
-      email: "selectport@trb.org",
-      password: "123123",
-      confirm_password: "wrong because drunk",
-    )
+  it "password mismatch" do
+    res = Tyrant::SignUp::Confirmed.({email: "selectport@trb.org", password: "123123", confirm_password: "Wrong because drunk"})
 
     res.failure?.must_equal true
     res["result.contract.default"].errors.messages.inspect.must_equal "{:confirm_password=>[\"Passwords don't match\"]}"
   end
 
-  # email taken.
-  # it do
-  #   Session::SignUp::Confirmed.run(user: {
-  #     email: "selectport@trb.org", password: "123123", confirm_password: "123123",
-  #   })
+  it "unique email" do
+    res = Tyrant::SignUp::Confirmed.({email: "selectport@trb.org", password: "123123", confirm_password: "123123"})
 
-  #   res, op = Session::SignUp::Confirmed.run(user: {
-  #     email: "selectport@trb.org",
-  #     password: "abcabc",
-  #     confirm_password: "abcabc",
-  #   })
+    res.success?.must_equal true
+    res["model"].email.must_equal "selectport@trb.org"
 
-  #   res.must_equal false
-  #   op.model.persisted?.must_equal false
-  #   op.errors.to_s.must_equal "{:email=>[\"email must be unique.\"]}"
-  # end
+    res = Tyrant::SignUp::Confirmed.({email: "selectport@trb.org", password: "123123", confirm_password: "123123"})
+
+    res.failure?.must_equal true
+    res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"must be filled\"], :password=>[\"must be filled\"], :confirm_password=>[\"must be filled\"]}"
+  end
+
 end

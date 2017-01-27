@@ -1,3 +1,4 @@
+require 'trailblazer'
 require 'tyrant/contract/get_email'
 
 class Tyrant::GetEmail < Trailblazer::Operation

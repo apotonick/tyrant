@@ -7,7 +7,7 @@ ActiveRecord::Base.establish_connection(
 )
 
 ActiveRecord::Schema.define do
-  create_table :new_users, force: true do |t|
+  create_table :users, force: true do |t|
     t.string :email
     t.text   :auth_meta_data
   end
