@@ -4,5 +4,7 @@ module Tyrant::Cell
     include ActionView::Helpers::FormOptionsHelper
     include Formular::RailsHelper
     include Formular::Helper
+
+    self.view_paths = "tyrant/view"
   end
 end
