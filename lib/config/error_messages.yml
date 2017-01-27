@@ -1,7 +1,9 @@
 en:
   errors:
-    password_ok?: "Passwords don't match"
     user_exists?: "User not found"
+    password_ok?: "Passwords are not matching"
+    new_must_match?: "The New Password is not matching"
+    new_password_must_be_new?: "New password can't match the old one"
     unique_email?: "This email has been already used"
     email?: "Wrong format"
-    new_password_must_be_new?: "New password can't match the old one"
+
