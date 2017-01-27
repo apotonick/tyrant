@@ -21,8 +21,8 @@ class Tyrant::ChangePassword < Trailblazer::Operation
     options["result.validate"] = (model.email == current_user.email)  
   end
 
-  def raise_error!(options, *)
-    raise ApplicationController::NotAuthorizedError
+  def raise_error!(options, error_handler: RaiseError, **)
+    error_handler.()
   end
 
   def update!(options, model:, params:, **)
@@ -31,4 +31,7 @@ class Tyrant::ChangePassword < Trailblazer::Operation
     auth.sync
     model.save
   end
+
+  RaiseError = -> {raise ApplicationController::NotAuthorizedError}
+
 end

@@ -11,6 +11,7 @@ class MiniTest::Spec
 
   after do
     Warden.test_reset!
+    ::User.delete_all
   end
 end
 
