@@ -4,6 +4,7 @@ require 'minitest/autorun'
 require 'warden'
 require 'active_record'
 require 'trailblazer/operation'
+require 'tyrant/operation/sign_up'
 
 class MiniTest::Spec
   include Warden::Test::Mock

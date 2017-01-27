@@ -22,7 +22,7 @@ class Tyrant::ChangePassword < Trailblazer::Operation
   end
 
   def raise_error!(options, *)
-    raise NotAuthorizedError
+    raise ApplicationController::NotAuthorizedError
   end
 
   def update!(options, model:, params:, **)

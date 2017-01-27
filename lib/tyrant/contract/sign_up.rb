@@ -21,7 +21,7 @@ module Tyrant::Contract
           ! /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i.match(form.email).nil?
         end
 
-        def password_ok?
+        def must_be_equal?
           return form.password == form.confirm_password
         end
       end
@@ -34,8 +34,8 @@ module Tyrant::Contract
         unique_email?
       end
 
-      validate(password_ok?: :confirm_password) do
-        password_ok?
+      validate(must_be_equal?: :confirm_password) do
+        must_be_equal?
       end
     end
   end
