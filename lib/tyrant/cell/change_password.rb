@@ -1,5 +1,5 @@
 module Tyrant::Cell
-  class ResetPassword < Trailblazer::Cell
+  class ChangePassword < Trailblazer::Cell
     include ActionView::RecordIdentifier
     include ActionView::Helpers::FormOptionsHelper
     include Formular::RailsHelper

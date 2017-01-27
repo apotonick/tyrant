@@ -1,19 +1,35 @@
 require "test_helper"
-require "sign_up_test"
-require "tyrant/operation/sign_up"
-require "tyrant"
+require 'active_record'
 
-User = Struct.new(:id, :auth_meta_data, :email) do
-  def save
-    @saved = true
-  end
-  def persisted?
-    @saved or false
+ActiveRecord::Base.establish_connection(
+  adapter:  'sqlite3',
+  database: 'db.sqlite3',
+)
+
+ActiveRecord::Schema.define do
+  create_table :new_users, force: true do |t|
+    t.string :email
+    t.text   :auth_meta_data
   end
 end
 
+class User < ActiveRecord::Base
+end
+
+
 class ResetPasswordTest < MiniTest::Spec
-  it do
+  it 'wrong input' do
+    res = Tyrant::SignUp::Confirmed.(
+      email: "selectport@trb.org",
+      password: "123123",
+      confirm_password: "123123",
+    )
+    res.success?.must_equal true
+    res["model"].email.must_equal "selectport@trb.org"
+
+  end
+
+  it 'reset password successfully' do
     res = Tyrant::SignUp::Confirmed.(
       email: "selectport@trb.org",
       password: "123123",

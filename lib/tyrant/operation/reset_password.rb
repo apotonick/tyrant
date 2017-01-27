@@ -15,8 +15,8 @@ module Tyrant
     def show_errors!(options, *)
     end
 
-    def model!(options, params:, user: GetUser, **)
-      options["model"] = user
+    def model!(options, params:, **)
+      options["model"] = User.find_by(email: params[:email])
     end
 
     def generate_password!(options, generator: PasswordGenerator,  **)
@@ -35,7 +35,6 @@ module Tyrant
     end
 
     PasswordGenerator = -> { SecureRandom.base64[0,8] }
-    GetUser = -> { User.find_by(email: params[:email]) }
 
   end
 end
