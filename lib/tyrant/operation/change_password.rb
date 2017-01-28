@@ -14,6 +14,7 @@ class Tyrant::ChangePassword < Trailblazer::Operation
     options["model"] = User.find_by(email: params[:email])
   end
 
+  #easy way to show the error in the validation 
   def show_errors!(options, *)
   end
 
@@ -21,6 +22,7 @@ class Tyrant::ChangePassword < Trailblazer::Operation
     options["result.validate"] = (model.email == current_user.email)  
   end
 
+  #using the error_handler options you can raise your own exception or whatever you want
   def raise_error!(options, error_handler: RaiseError, **)
     error_handler.()
   end
