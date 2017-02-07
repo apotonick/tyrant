@@ -22,11 +22,10 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "rake", "~> 10.0"
   spec.add_development_dependency "minitest"
 
-  spec.add_development_dependency "activemodel"
+  spec.add_development_dependency "activemodel", "~> 4.2.6"
 
   spec.add_dependency "trailblazer", ">= 2.0.1"
   spec.add_dependency "reform", "~> 2.0"
-  spec.add_dependency "reform-rails"
   spec.add_dependency "disposable", ">= 0.1.11"
 
   spec.add_dependency "warden", "1.2.6"
@@ -38,4 +37,8 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "activerecord"
   spec.add_dependency "sqlite3"
+  
+  spec.add_dependency "trailblazer-cells"
+  spec.add_dependency 'cells-rails'
+  spec.add_dependency 'cells-slim'
 end
