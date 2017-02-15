@@ -6,8 +6,7 @@ class Tyrant::ChangePassword < Trailblazer::Operation
   step Trailblazer::Operation::Contract::Validate()
   failure :show_errors!,                                fail_fast: true
   step :model!
-  step :policy!   
-  failure :raise_error!
+  step Policy::Guard(:authorize!)   
   step :update!   
 
   def model!(options, params:, **)
@@ -18,13 +17,8 @@ class Tyrant::ChangePassword < Trailblazer::Operation
   def show_errors!(options, *)
   end
 
-  def policy!(options, model:, current_user:, **)
+  def authorize!(options, model:, current_user:, **)
     options["result.validate"] = (model.email == current_user.email)  
-  end
-
-  #using the error_handler key you can raise your own exception or whatever you want
-  def raise_error!(options, error_handler: RaiseError, **)
-    error_handler.()
   end
 
   def update!(options, model:, params:, **)
@@ -33,7 +27,5 @@ class Tyrant::ChangePassword < Trailblazer::Operation
     auth.sync
     model.save
   end
-
-  RaiseError = -> {raise ApplicationController::NotAuthorizedError}
 
 end

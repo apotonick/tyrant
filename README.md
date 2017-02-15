@@ -66,7 +66,7 @@ Which will show a form with `email`, `password`, `new_password` and `confirm_new
 ```ruby
 def change_password
   run Tyrant::ChangePassword do
-    flash[:alert] = "The new password has been saved" #this is just a flash message
+    flash[:alert] = "The new password has been saved" #flash message
     return redirect_to user_path(tyrant.current_user)
   end
 
@@ -74,7 +74,7 @@ def change_password
 end
 ```
 
-Evaluating the form means first in first build and validate the `TRB::Contract`, which means verify if:
+Evaluating the form means validate the `TRB::Contract` and apply the `Policy::Guard`, which means verify if:
 
 * all the input are filled
 * a User with that `email` exists
@@ -82,48 +82,58 @@ Evaluating the form means first in first build and validate the `TRB::Contract`,
 * the `new_password` is different than `password`
 * the `confirm_new_password` matches `new_password`
 
-In case there is a problem in the inputs an error message is shown otherwise the `TRB::Op` will check the `policy`, so in case the email in the form is different than the email in `current_user` the exception `ApplicationController::NotAuthorizedError` is rased, so for example a flash message is shown and the app redirect to `root_path`:
+In case there is a problem in the inputs an error message is shown otherwise the `TRB::Op` will check the `policy`, therefore in case the email in the form is different than the email in `current_user` the policy will be falsey and you can handle in the way you want. Example:
 
 ```ruby
-class ApplicationController < ActionController::Base
-  ..
-  ..
-  ..
+require 'reform/form/dry' 
 
-  class NotAuthorizedError < RuntimeError
-  end
-  
-  rescue_from ApplicationController::NotAuthorizedError do |exception|
-    flash[:alert] = "You are not authorized!"
-    redirect_to rooth_path
-  end
-```
-Using [Dependency injection](http://trailblazer.to/gems/operation/2.0/api.html#dependency-injection) is possible to change how to handle the situation in case the policy is falsey using the "error_handler" key. The only requirement is that you need to pass a callable object so either a method or a Proc, for example:
+class User::ChangePassword < Trailblazer::Operation
+  step Nested(Tyrant::ChangePassword)
+  failure :raise_error!
+  step :notify!
 
-```rybu
-DoSomething = -> {raise MyErrors::ChangePassword}
+  def raise_error!(options, *)
+    raise ApplicationController::NotAuthorizedError if options["result.policy.default"].failure?
+  end
+
+  def notify!(options, current_user:, **)
+    Notification::User.({}, "email" => current_user.email, "type" => "change_password")
+  end
+
+end
 ```
-And add the "error_handler" key when you call the operation as at least **second argument (first argument is always `params`)**:
-```ruby
-Tyrant::ChangePassword.({}, "error_handler" => DoSomething)
-```
-If everything goes as should go the `new_password` is saved in the User model.
+After nesting`Tyrant::ChangePassword` you can create a failure step where in case of a false policy a NotAuthorizedError is raised.
+
+If `validation` and `policy` are satisfied the `new_password` is saved in the User model.
 
 ### Reset Password
 
-Reset Password wants as `params` the email of the user and if the validation passes, it will send an email with a new password.
-The validations are 
+It's possible to use the build in form even for to reset the password. Here the actions in your controller:
 
-Run `Tyrant::ResetPassword.({email: your_user_email})` after checked that the user exists in your database in order to send a random 8 character password to the email saved in `your_user_model`.
-Override `generate_password` to have a different random password generation:
+**Present the form (Build the `TRB::Contract`)**
 ```ruby
-Tyrant::ResetPassword.class_eval do 
-  def generate_password!(options, *)
-    # your code
-  end
+def get_email
+    run Tyrant::GetEmail
+    render cell(Tyrant::Cell::ResetPassword, result["contract.default"], context: {"current_user" => User}, layout: Your::Cell::Layout)
 end
 ```
-Otherwise simply replace the `generate_password!` step in `Tyrant::ResetPassword`.
+Which will show a form with `email` and a `Reset Password` button.
+
+**Evaluate the form (Build/Validate the `TRB::Cotract`, generate a random passowrd, update the model and sent an email notification)**
+```ruby
+def Tyrant::ResetPassword do 
+    flash[:alert] = "Your password has been reset" #flash message
+    return redirect_to "/sessions/new"
+  end
+
+  render cell(Tyrant::Cell::ResetPassword, result["contract.default"], context: {"current_user" => User}, layout: Your::Cell::Layout)
+end
+```
+
+The contract validation will check if the email is filled and if a the user exists in your database.
+A 8 characters password is generate in case the validation is satisfied and a basic email is sent to the User's email.
+
+Nesting `Tyrant::ResetPassword` allows you to replace the `:generate_password!` and `:notify!` steps in order to change the way the password is generated and use your own email notification.
 
 The really basic email notification is sent using [Pony](https://github.com/benprew/pony) gem.
 Replace the step or override `email_options` to set your options and test your code:
@@ -134,8 +144,6 @@ Tyrant::Mailer.class_eval do
   end  
 end
 ```
-
-Replace the step or override `class Tyrant::Mailer` to have a better looking (and not only) email notification but remember that we love TRB so it must be a `TRB::Operation`: `Tyrant::Mailer.({email: model.email, new_password: new_password})`.
 
 This may be used as `Forgot Password` as well.
 
