@@ -9,6 +9,6 @@ module Tyrant::Cell
     include Formular::RailsHelper
     include Formular::Helper
 
-    self.view_paths << "tyrant/lib"
+    self.view_paths << File.absolute_path("lib")
   end
 end

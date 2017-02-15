@@ -12,7 +12,7 @@ module Tyrant::Contract
     validation do
       configure do
         option :form
-        config.messages_file = './config/error_messages.yml' 
+        config.messages_file = './config/error_messages.yml'
 
         def user_exists?
           User.where(email: form.email).size == 1
