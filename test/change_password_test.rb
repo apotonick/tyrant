@@ -17,7 +17,7 @@ class ChangePasswordTest < MiniTest::Spec
     res = Tyrant::ChangePassword.({email: "wrong@trb.org", password: "wrong"})
 
     res.failure?.must_equal true
-    res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"User not found\"], :password=>[\"Wrong Password\"], :new_password=>[\"must be filled\"], :confirm_new_password=>[\"must be filled\"]}"
+    res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"User not found\"], :password=>[\"Wrong Password\"], :new_password=>[\"is missing\"], :confirm_new_password=>[\"is missing\"]}"
   end
 
   it "wrong new password" do

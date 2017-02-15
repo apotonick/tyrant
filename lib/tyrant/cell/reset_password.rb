@@ -1,3 +1,7 @@
+require 'trailblazer/cell'
+require 'action_view'
+require 'formular'
+
 module Tyrant::Cell
   class ResetPassword < Trailblazer::Cell
     include ActionView::RecordIdentifier
@@ -5,6 +9,6 @@ module Tyrant::Cell
     include Formular::RailsHelper
     include Formular::Helper
 
-    self.view_paths << '/home/emamaglio/projects/tyrant/lib'
+    self.view_paths << "tyrant/lib"
   end
 end
