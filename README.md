@@ -163,6 +163,11 @@ Tyrant comes with a railtie to provide you an initializer. In Rails, add this to
 require "tyrant/railtie"
 ```
 
+The forms are presented using `formular` and `bootstrap` so this needs to be into an initializer.
+
+```ruby
+Formular::Helper.builder= :bootstrap4
+```
 
 ## License
 
