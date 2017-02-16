@@ -25,7 +25,7 @@ Tyrant exposes its public API using operations.
 
 Operations are the pivotal element in the [Trailblazer architecture](https://github.com/apotonick/trailblazer). When it comes to customization, Tyrant doesn't rely on a "hopefully complete" configuration language as Devise does it.
 
-Tyrant allows you to customize with Ruby. You can override entire workflow steps (operations), forms and validations (contracts) or methods using simple object-orientation and a clean API.
+Tyrant allows you to customise with Ruby. You can override entire workflow steps (operations), forms and validations (contracts) or methods using simple object-orientation and a clean API.
 
 
 This means you can easily use them in Rails controllers.
@@ -40,29 +40,29 @@ class SessionController < ApplicationController
 You can also run the public API in any other Ruby environment, e.g. a console or a Roda action.
 
 ```ruby
-Tyrant::SignIn.(params)
+Tyrant::SignIn.({params})
 ```
 
 Tyrant provides forms for all workflow steps. using [Reform](https://github.com/apotonick/reform) objects that are embedded into the operations.
 
 
-=> Customize with inheritance, or override. Or just don't use the operation and write your own "step".
+=> Customise with inheritance, or override. Or just don't use the operation and write your own "step".
 
-### Change Passowrd
+### Change Password
 
-Tyrant provides forms using [Traiblazer::Cells](https://github.com/trailblazer/cells) which means that you don't need to create your own form to get the email, test if the email has a correct format, check if the User exists and bla bla, it's already done here.
-Here your 2 methods in your `UserController`:
+Tyrant provides a build-in form to change the password, which means that getting and validation the inputs is already done here.
+Here what your `UserController` would look like (the `render` can be much better that than it just depends on what you need):
 
-**Present the form (Build the `Tyrant::Cotract::ChangePassword`)**
+**To present the form (Build the `Tyrant::Contract::ChangePassword`)**
 ```ruby
 def get_new_password
   run Tyrant::GetNewPassword
   render cell(Tyrant::Cell::ChangePassword, result["contract.default"], context: {"current_user" => User}, layout: Your::Cell::Layout)
 end
 ```
-Which will show a form with `email`, `password`, `new_password` and `confirm_new_password` with a `Change Password` button.
-
-**Evaluate the form (Build/Validate the `Tyrant::Cotract::ChangePassword`, `policy` check, `change` password)**
+Which will show a form with 4 inputs: `email`, `password`, `new_password`, `confirm_new_password` and a `Change Password` button.
+ 
+**To evaluate the form (Build/Validate the `Tyrant::Contract::ChangePassword`, `policy` check, `change` password)**
 ```ruby
 def change_password
   run Tyrant::ChangePassword do
@@ -74,7 +74,7 @@ def change_password
 end
 ```
 
-Evaluating the form means validate the `TRB::Contract` and apply the `Policy::Guard`, which means verify if:
+Here the validation for the `Contract`:
 
 * all the input are filled
 * a User with that `email` exists
@@ -82,7 +82,7 @@ Evaluating the form means validate the `TRB::Contract` and apply the `Policy::Gu
 * the `new_password` is different than `password`
 * the `confirm_new_password` matches `new_password`
 
-In case there is a problem in the inputs an error message is shown otherwise the `TRB::Op` will check the `policy`, therefore in case the email in the form is different than the email in `current_user` the policy will be falsey and you can handle in the way you want. Example:
+In case there is a problem in the inputs an error message is shown otherwise the `TRB::Op` will check the `policy`: the email in the form must be equal the email in `current_user`. The operation will return a falsey policy if not satisfied and it can be handled in different way, for example: 
 
 ```ruby
 require 'reform/form/dry' 
@@ -102,7 +102,7 @@ class User::ChangePassword < Trailblazer::Operation
 
 end
 ```
-After nesting`Tyrant::ChangePassword` you can create a failure step where in case of a false policy a NotAuthorizedError is raised.
+After nesting`Tyrant::ChangePassword` you can create a failure step where in case of a false policy a `NotAuthorizedError` is raised.
 
 If `validation` and `policy` are satisfied the `new_password` is saved in the User model.
 
@@ -110,7 +110,7 @@ If `validation` and `policy` are satisfied the `new_password` is saved in the Us
 
 There is a build-in form to reset the password as well. Here the actions in your controller:
 
-**Present the form (Build the `Tyrant::Cotract::GetEmail`)**
+**Present the form (Build the `Tyrant::Contract::GetEmail`)**
 ```ruby
 def get_email
     run Tyrant::GetEmail
@@ -119,7 +119,7 @@ end
 ```
 Which will show a form with `email` and a `Reset Password` button.
 
-**Evaluate the form (Build/Validate the `Tyrant::Cotract::GetEmail`, generate a random passowrd, update the model and sent an email notification)**
+**Evaluate the form (Build/Validate the `Tyrant::Contract::GetEmail`, generate a random password, update the model and sent an email notification)**
 ```ruby
 def Tyrant::ResetPassword do 
     flash[:alert] = "Your password has been reset" #flash message
@@ -133,14 +133,15 @@ end
 The contract validation will check if the email is filled and if a the user exists in your database.
 In case the validation is satisfied a random 8 characters password is generated and a basic notification email is sent to the User's email.
 
-[Inerithing](http://trailblazer.to/gems/operation/2.0/api.html#inheritance-override) `Tyrant::ResetPassword` allows you to override the `:generate_password!` and `:notify_user!` steps in order to change the way the password is generated and use your own email notification. Example:
+To change how to generate a new password and the email notification creating your own operation [inherithing](http://trailblazer.to/gems/operation/2.0/api.html#inheritance-override) it from `Tyrant::ResetPassword` and override the `:generate_password!` and `:notify_user!` steps.
+Example:
 
 ```ruby
 require 'reform/form/dry' 
 
 class User::ResetPassword < Tyrant::ResetPassword
-  step :generate_password!, overide: true
-  step :notify_user!, overide: true
+  step :generate_password!, override: true
+  step :notify_user!, override: true
 
   def generate_password!(options, *)
     options["new_password"] = "NewPassword"
@@ -153,8 +154,9 @@ class User::ResetPassword < Tyrant::ResetPassword
 
 end
 ```
+In this way my new password will be always `NewPassword` and I don't send any notification.
 
-The email notification is sent using [Pony](https://github.com/benprew/pony) gem.
+The build-in email notification is sent using [Pony](https://github.com/benprew/pony) gem.
 Replace the step or override `email_options!` to set your options and test your code:
 ```ruby
 Tyrant::Mailer.class_eval do 
@@ -165,6 +167,8 @@ end
 ```
 
 This may be used as `Forgot Password` as well.
+
+*To use custom `view` files save your file in the folder `app/concepts/tyrant/view` with names `change_password.slim` and `reset_password.slim`.*
 
 ## Installation
 
@@ -191,4 +195,3 @@ Formular::Helper.builder= :bootstrap4
 ## License
 
 The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
-
