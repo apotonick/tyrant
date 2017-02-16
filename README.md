@@ -53,7 +53,7 @@ Tyrant provides forms for all workflow steps. using [Reform](https://github.com/
 Tyrant provides forms using [Traiblazer::Cells](https://github.com/trailblazer/cells) which means that you don't need to create your own form to get the email, test if the email has a correct format, check if the User exists and bla bla, it's already done here.
 Here your 2 methods in your `UserController`:
 
-**Present the form (Build the `TRB::Contract`)**
+**Present the form (Build the `Tyrant::Cotract::ChangePassword`)**
 ```ruby
 def get_new_password
   run Tyrant::GetNewPassword
@@ -62,7 +62,7 @@ end
 ```
 Which will show a form with `email`, `password`, `new_password` and `confirm_new_password` with a `Change Password` button.
 
-**Evaluate the form (Build/Validate the `TRB::Cotract`, `policy` check, `change` password)**
+**Evaluate the form (Build/Validate the `Tyrant::Cotract::ChangePassword`, `policy` check, `change` password)**
 ```ruby
 def change_password
   run Tyrant::ChangePassword do
@@ -108,9 +108,9 @@ If `validation` and `policy` are satisfied the `new_password` is saved in the Us
 
 ### Reset Password
 
-It's possible to use the build in form even for to reset the password. Here the actions in your controller:
+There is a build-in form to reset the password as well. Here the actions in your controller:
 
-**Present the form (Build the `TRB::Contract`)**
+**Present the form (Build the `Tyrant::Cotract::GetEmail`)**
 ```ruby
 def get_email
     run Tyrant::GetEmail
@@ -119,7 +119,7 @@ end
 ```
 Which will show a form with `email` and a `Reset Password` button.
 
-**Evaluate the form (Build/Validate the `TRB::Cotract`, generate a random passowrd, update the model and sent an email notification)**
+**Evaluate the form (Build/Validate the `Tyrant::Cotract::GetEmail`, generate a random passowrd, update the model and sent an email notification)**
 ```ruby
 def Tyrant::ResetPassword do 
     flash[:alert] = "Your password has been reset" #flash message
@@ -131,12 +131,31 @@ end
 ```
 
 The contract validation will check if the email is filled and if a the user exists in your database.
-A 8 characters password is generate in case the validation is satisfied and a basic email is sent to the User's email.
+In case the validation is satisfied a random 8 characters password is generated and a basic notification email is sent to the User's email.
 
-Nesting `Tyrant::ResetPassword` allows you to replace the `:generate_password!` and `:notify!` steps in order to change the way the password is generated and use your own email notification.
+[Inerithing](http://trailblazer.to/gems/operation/2.0/api.html#inheritance-override) `Tyrant::ResetPassword` allows you to override the `:generate_password!` and `:notify_user!` steps in order to change the way the password is generated and use your own email notification. Example:
 
-The really basic email notification is sent using [Pony](https://github.com/benprew/pony) gem.
-Replace the step or override `email_options` to set your options and test your code:
+```ruby
+require 'reform/form/dry' 
+
+class User::ResetPassword < Tyrant::ResetPassword
+  step :generate_password!, overide: true
+  step :notify_user!, overide: true
+
+  def generate_password!(options, *)
+    options["new_password"] = "NewPassword"
+  end
+
+  def notify_user!(options, current_user:, **)
+    #my notification
+    true
+  end
+
+end
+```
+
+The email notification is sent using [Pony](https://github.com/benprew/pony) gem.
+Replace the step or override `email_options!` to set your options and test your code:
 ```ruby
 Tyrant::Mailer.class_eval do 
   def email_options!(options, *)
@@ -163,7 +182,7 @@ Tyrant comes with a railtie to provide you an initializer. In Rails, add this to
 require "tyrant/railtie"
 ```
 
-The forms are presented using `formular` and `bootstrap` so this needs to be into an initializer.
+The forms are presented using formular and bootstrap so this needs to be into an initializer.
 
 ```ruby
 Formular::Helper.builder= :bootstrap4
