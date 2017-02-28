@@ -9,9 +9,8 @@ module Tyrant::Contract
     property :new_password, virtual: true
     property :confirm_new_password, virtual: true
 
-    validation do
+    validation with: { form: true } do
       configure do
-        option :form
         config.messages_file = './config/error_messages.yml'
 
         def user_exists?
