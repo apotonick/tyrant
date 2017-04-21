@@ -36,8 +36,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency "formular"
 
   spec.add_dependency "activerecord"
-  spec.add_dependency "sqlite3"
-  
+
   spec.add_dependency "trailblazer-cells"
   spec.add_dependency 'cells-rails'
   spec.add_dependency 'cells-slim'
