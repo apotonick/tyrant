@@ -11,6 +11,7 @@ module Tyrant
     def email_options!(options, via: :smtp, **)
       Pony.options = {
                       from: "admin@email.com",
+                      subject: "Reset password for your application",
                       via: via, 
                       via_options: {
                                     address: "smtp.gmail.com", 
@@ -18,8 +19,7 @@ module Tyrant
                                     domain: 'localhost:3000', 
                                     enable_starttls_auto: true, 
                                     user_name: "your_email@gmail.com", 
-                                    password: "your_password", 
-                                    subject: "Reset password for your application",
+                                    password: "your_password",
                                     authentication: :plain
                                     } 
                       }
