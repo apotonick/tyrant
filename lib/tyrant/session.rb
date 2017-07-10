@@ -14,7 +14,9 @@ module Tyrant
     end
 
     def sign_in!(user, options = {})
-      @warden.set_user(user, scope: options[:scope] || :default)
+      options[:scope] ||= :default
+
+      @warden.set_user(user, options)
     end
 
     # Sign out the default scope only if not specified.
