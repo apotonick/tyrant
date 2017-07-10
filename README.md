@@ -14,7 +14,7 @@ Operations are provided for the following steps.
 * SignOut
 * ResetPassword
 * Forgot pw
-* Mutiple sessions with scopes
+* Multiple sessions with scopes
 
 
 ## Operations
