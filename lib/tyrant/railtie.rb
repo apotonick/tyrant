@@ -13,6 +13,8 @@ module Tyrant
       Warden::Manager.serialize_from_session do |record|
         record[:model].constantize.find_by(id: record[:id]) # Session.sign_in!(user) or something!
       end
+
+      config.failure_app = -> (_env) { [401, { "Content-Type" => "text/plain" }, ["Authorization Failed"]] }
     end
   end
 end
