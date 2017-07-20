@@ -11,7 +11,7 @@ class Tyrant::SignUp < Trailblazer::Operation
           config.messages_file = File.join(File.dirname(__FILE__), "../../config/error_messages.yml") # FIXME: do this once.
 
           def unique_email?
-            User.where("email = ?", form.email).size == 0
+            User.where("email = ?", form.email).count == 0
           end
 
           def email?
