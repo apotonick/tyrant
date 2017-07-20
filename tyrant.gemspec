@@ -26,13 +26,14 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency "trailblazer", ">= 2.0.1"
   spec.add_dependency "reform",      ">= 2.3.0.rc1"
+  spec.add_dependency "dry-validation"
   spec.add_dependency "disposable",  ">= 0.1.11"
 
   spec.add_dependency "warden",      ">= 1.2.6"
   spec.add_dependency "bcrypt"
 
+
   # spec.add_dependency "pony"
-  # spec.add_dependency "dry-validation"
   # spec.add_dependency "formular"
 
   # spec.add_dependency "activerecord"
