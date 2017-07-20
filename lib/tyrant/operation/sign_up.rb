@@ -4,14 +4,20 @@ module Tyrant
       step Model( ::User, :new )
       step Contract::Build( constant: Form::SignUp )
       step Contract::Validate()
-      step Contract::Persist()
-      step :update!
+      step Contract::Persist( method: :sync ) # write :email to model.
+      step :digest!
+      step :save!
 
-      def update!(options, params:, model:, **)
+      def digest!(options, params:, model:, **)
         auth = Tyrant::Authenticatable.new(model)
-        auth.digest!(params[:password]) # contract.auth_meta_data.password_digest = ..
+
+        auth.digest!( options["contract.default"].password )
         auth.confirmed!
-        auth.sync
+
+        auth.sync # write :auth_meta_data field to model.
+      end
+
+      def save!(options, model:, **)
         model.save
       end
     end

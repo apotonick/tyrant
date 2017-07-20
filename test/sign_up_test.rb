@@ -2,7 +2,7 @@ require "test_helper"
 
 class SessionSignUpTest < MiniTest::Spec
   it 'signup successfully' do
-    res = Tyrant::SignUp::Confirmed.({email: "selectport@trb.org", password: "123123", confirm_password: "123123"})
+    res = Tyrant::SignUp::Confirmed.({ email: "selectport@trb.org", password: "123123", confirm_password: "123123" })
 
     res.success?.must_equal true
     res["model"].email.must_equal "selectport@trb.org"
