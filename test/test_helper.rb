@@ -2,7 +2,6 @@ $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
 require 'tyrant'
 require 'minitest/autorun'
 require 'warden'
-# require 'active_record'
 
 class MiniTest::Spec
   include Warden::Test::Mock
@@ -13,22 +12,21 @@ class MiniTest::Spec
   end
 end
 
-# ActiveRecord::Base.establish_connection(
-#   adapter:  'sqlite3',
-#   database: 'db.sqlite3',
-# )
 
-# ActiveRecord::Schema.define do
-#   create_table :users, force: true do |t|
-#     t.string :email
-#     t.text   :auth_meta_data
-#   end
-# end
+require 'active_record'
 
-# class User < ActiveRecord::Base
-#   serialize :auth_meta_data
-# end
+ActiveRecord::Base.establish_connection(
+  adapter:  'sqlite3',
+  database: 'db.sqlite3',
+)
 
-User = Struct.new(:id, :auth_meta_data, :email) do
+ActiveRecord::Schema.define do
+  create_table :users, force: true do |t|
+    t.string :email
+    t.text   :auth_meta_data
+  end
+end
 
+class User < ActiveRecord::Base
+  serialize :auth_meta_data
 end
