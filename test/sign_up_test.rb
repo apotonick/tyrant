@@ -1,6 +1,36 @@
 require "test_helper"
 
 class SessionSignUpTest < MiniTest::Spec
+  describe "Abstract, no password confirmation" do
+    it 'is successful' do
+      res = Tyrant::SignUp.({ email: "selectport@trb.to", password: "123123" })
+
+      res.success?.must_equal true
+      res["model"].email.must_equal "selectport@trb.to"
+
+      assert Tyrant::Authenticatable.new(res["model"]).digest == "123123"
+      Tyrant::Authenticatable.new(res["model"]).confirmed?.must_equal true
+      Tyrant::Authenticatable.new(res["model"]).confirmable?.must_equal false
+    end
+
+    it "empty fields" do
+      res = Tyrant::SignUp.({ email: "", password: "" })
+
+      res.failure?.must_equal true
+      res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"must be filled\", \"Wrong format\"], :password=>[\"must be filled\"]}"
+    end
+
+    it "requires unique email" do
+      Tyrant::SignUp.({email: "manu@trb.to", password: "123123"})
+
+      res = Tyrant::SignUp.({email: "manu@trb.to", password: "1231235"})
+
+      res.failure?.must_equal true
+      res["result.contract.default"].errors.messages.inspect.must_equal "{:email=>[\"This email has been already used\"]}"
+    end
+  end
+
+
   it 'signup successfully' do
     res = Tyrant::SignUp::Confirmed.({ email: "selectport@trb.org", password: "123123", confirm_password: "123123" })
 
