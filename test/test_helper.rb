@@ -1,4 +1,5 @@
 $LOAD_PATH.unshift File.expand_path('../../lib', __FILE__)
+
 require 'tyrant'
 require 'minitest/autorun'
 require 'warden'
@@ -30,3 +31,9 @@ end
 class User < ActiveRecord::Base
   serialize :auth_meta_data
 end
+
+
+
+# load features
+
+require "tyrant/sign_up"

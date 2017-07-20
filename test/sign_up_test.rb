@@ -1,6 +1,4 @@
 require "test_helper"
-require "tyrant/operation/sign_up"
-
 
 class SessionSignUpTest < MiniTest::Spec
   it 'signup successfully' do

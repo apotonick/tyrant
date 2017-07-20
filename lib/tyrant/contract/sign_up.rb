@@ -1,4 +1,4 @@
-module Tyrant::Contract
+module Tyrant::Form
   class SignUp < Reform::Form
     feature Reform::Form::Dry
 

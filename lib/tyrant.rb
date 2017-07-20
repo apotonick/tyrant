@@ -4,6 +4,9 @@ module Tyrant
   # Your code goes here...
 end
 
+require "trailblazer"
+
+
 require "disposable/twin"
 require "tyrant/authenticatable"
 require "tyrant/session"
@@ -14,6 +17,7 @@ require "tyrant/session"
 # require "tyrant/cell/reset_password"
 # require "tyrant/cell/change_password"
 
-
 require "reform"
 require "reform/form/dry"
+
+
