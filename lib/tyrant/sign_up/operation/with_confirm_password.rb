@@ -2,13 +2,13 @@ module Tyrant
   class SignUp < Trailblazer::Operation
     class Confirmed < Trailblazer::Operation
       step Model( ::User, :new )
-      step Contract::Build( constant: Form::SignUp )
+      step Contract::Build( constant: Form::WithConfirmPassword )
       step Contract::Validate()
       step Contract::Persist( method: :sync ) # write :email to model.
       step :digest!
       step :save!
 
-      def digest!(options, params:, model:, **)
+      def digest!(options, model:, **)
         auth = Tyrant::Authenticatable.new(model)
 
         auth.digest!( options["contract.default"].password )
