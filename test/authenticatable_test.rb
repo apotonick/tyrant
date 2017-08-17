@@ -77,4 +77,40 @@ class AuthenticatableTest < MiniTest::Spec
       auth.digest?("secret: Trailblazer rules!").must_equal true
     end
   end
+
+  describe '#digest_reset_password!' do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.auth_meta_data.reset_password_token.must_equal nil
+      auth.auth_meta_data.reset_password_expire_at.must_equal nil
+
+      auth.digest_reset_password!("secret: TRB reset password!", "now + 1 hour")
+      auth.auth_meta_data.reset_password_token.must_equal "secret: TRB reset password!"
+      auth.auth_meta_data.reset_password_expire_at.must_equal "now + 1 hour"
+   end
+  end
+
+  describe '#digest_reset_password?' do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.digest_reset_password!("secret: TRB reset password!")
+
+      auth.digest_reset_password?("secret: TRB reset password!").must_equal true
+    end
+  end
+
+  describe '#reset_password_expired?' do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.digest_reset_password!("secret: TRB reset password!")
+      auth.digest_reset_password?("secret: TRB reset password!").must_equal true
+
+      # not expired
+      auth.reset_password_expired?.must_equal false
+
+      # test if expires
+      auth.digest_reset_password!("secret: TRB reset password!", DateTime.now - 1.minute)
+      auth.reset_password_expired?.must_equal true
+    end
+  end
 end

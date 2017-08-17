@@ -12,6 +12,8 @@ module Tyrant
       property :confirmed_at
       property :confirmation_created_at
       property :password_digest
+      property :reset_password_token
+      property :reset_password_expire_at
     end
 
     module Confirm
@@ -71,5 +73,21 @@ module Tyrant
       end
     end
     include Digest
+
+    module ResetPassword
+      def digest_reset_password!(password, expire_at=(DateTime.now + 1.hours))
+        auth_meta_data.reset_password_token = password
+        auth_meta_data.reset_password_expire_at = expire_at
+      end
+
+      def reset_password_expired?
+        DateTime.now > auth_meta_data.reset_password_expire_at
+      end
+
+      def digest_reset_password?(password)
+        auth_meta_data.reset_password_token == password
+      end
+    end
+    include ResetPassword
   end
 end
