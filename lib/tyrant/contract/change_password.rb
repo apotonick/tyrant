@@ -1,7 +1,7 @@
 require 'reform/form/dry'
 
-module Tyrant::Contract 
-  class ChangePassword < Reform::Form 
+module Tyrant::Contract
+  class ChangePassword < Reform::Form
     feature Reform::Form::Dry
 
     property :email, virtual: true
@@ -11,7 +11,7 @@ module Tyrant::Contract
 
     validation with: { form: true } do
       configure do
-        config.messages_file = './config/error_messages.yml'
+        config.messages_file = File.join(File.dirname(__dir__), '/config/error_messages.yml') # FIXME: do this once.
 
         def user_exists?
           User.where(email: form.email).size == 1
@@ -25,7 +25,7 @@ module Tyrant::Contract
           return form.password != form.new_password
         end
 
-        def password_ok? 
+        def password_ok?
           return Tyrant::Authenticatable.new(User.find_by(email: form.email)).digest?(form.password) == true if user_exists?
         end
 
@@ -43,7 +43,7 @@ module Tyrant::Contract
       validate(new_password_must_be_new?: :new_password) do
         new_password_must_be_new?
       end
-        
+
       validate(new_must_match?: :confirm_new_password) do
         new_must_match?
       end

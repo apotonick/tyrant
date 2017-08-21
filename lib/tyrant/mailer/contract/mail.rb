@@ -2,15 +2,15 @@ require 'reform'
 require 'reform/form/dry'
 
 module Tyrant::Contract
-  class Mail < Reform::Form 
+  class Mail < Reform::Form
     feature Reform::Form::Dry
 
     property :email, virtual: true
-    property :new_password, virtual: true
+    property :reset_link, virtual: true
 
     validation do
       required(:email).filled
-      required(:new_password).filled
+      required(:reset_link).filled
     end
   end
 end

@@ -6,19 +6,19 @@ class Tyrant::ChangePassword < Trailblazer::Operation
   step Trailblazer::Operation::Contract::Validate()
   failure :show_errors!,                                fail_fast: true
   step :model!
-  step Policy::Guard(:authorize!)   
-  step :update!   
+  step Policy::Guard(:authorize!)
+  step :update!
 
   def model!(options, params:, **)
     options["model"] = User.find_by(email: params[:email])
   end
 
-  #easy way to show the error in the validation 
+  #easy way to show the error in the validation
   def show_errors!(options, *)
   end
 
   def authorize!(options, model:, current_user:, **)
-    options["result.validate"] = (model.email == current_user.email)  
+    options["result.validate"] = (model.email == current_user.email)
   end
 
   def update!(options, model:, params:, **)
