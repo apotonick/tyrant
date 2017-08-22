@@ -1,12 +1,9 @@
 require 'pony'
-require 'tyrant/mailer/contract/mail'
-require 'tyrant/mailer/cell/reset_email'
 
 module Tyrant
-
   class Mailer < Trailblazer::Operation
-    step Trailblazer::Operation::Contract::Build(constant: Tyrant::Contract::Mail)
-    step Trailblazer::Operation::Contract::Validate()
+    step Contract::Build(constant: Form::Email)
+    step Contract::Validate()
     step :email_options!
     step :send_email!
 
@@ -32,5 +29,5 @@ module Tyrant
                   html_body: Tyrant::Cell::ResetEmail.new(nil, reset_link: params[:reset_link], email: params[:email]).show
                 )
     end
-  end
-end
+  end # class Mailer
+end # module Tyrant

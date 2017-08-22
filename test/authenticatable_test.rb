@@ -90,6 +90,20 @@ class AuthenticatableTest < MiniTest::Spec
    end
   end
 
+  describe '#reset_password_expired!' do
+    it do
+      auth = Authenticatable.new(User.new)
+      auth.auth_meta_data.reset_password_token.must_equal nil
+      auth.auth_meta_data.reset_password_expire_at.must_equal nil
+
+      auth.digest_reset_password!("secret: TRB reset password!", "now + 1 hour")
+
+      auth.reset_password_expired!
+      auth.auth_meta_data.reset_password_expire_at.wont_equal "now + 1 hour"
+      auth.auth_meta_data.reset_password_expire_at.strftime("%d%m%Y - %H%M").must_equal DateTime.now.strftime("%d%m%Y - %H%M")
+   end
+  end
+
   describe '#digest_reset_password?' do
     it do
       auth = Authenticatable.new(User.new)

@@ -80,6 +80,10 @@ module Tyrant
         auth_meta_data.reset_password_expire_at = expire_at
       end
 
+      def reset_password_expired!
+        auth_meta_data.reset_password_expire_at = DateTime.now
+      end
+
       def reset_password_expired?
         DateTime.now > auth_meta_data.reset_password_expire_at
       end
