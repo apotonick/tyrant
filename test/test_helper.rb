@@ -39,5 +39,5 @@ end
 require "tyrant/sign_up"
 require "tyrant/mailer"
 require "tyrant/reset_password"
-require "tyrant/operation/change_password.rb"
+require "tyrant/change_password"
 
