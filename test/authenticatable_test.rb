@@ -48,7 +48,7 @@ class AuthenticatableTest < MiniTest::Spec
   describe "#confirmation_token" do
     it do
       auth = Authenticatable.new(User.new)
-      auth.confirmation_token.must_equal nil
+      assert_nil auth.confirmation_token
       auth.confirmable!
       auth.confirmation_token.must_be_kind_of String
     end
@@ -58,7 +58,7 @@ class AuthenticatableTest < MiniTest::Spec
   describe "#digest!" do
     it do
       auth = Authenticatable.new(User.new)
-      auth.digest.must_equal nil
+      assert_nil auth.digest
       auth.digest!("secret: Trailblazer rules!")
       assert auth.digest == "secret: Trailblazer rules!"
       auth.digest.must_be_instance_of BCrypt::Password
@@ -81,8 +81,8 @@ class AuthenticatableTest < MiniTest::Spec
   describe '#digest_reset_password!' do
     it do
       auth = Authenticatable.new(User.new)
-      auth.auth_meta_data.reset_password_token.must_equal nil
-      auth.auth_meta_data.reset_password_expire_at.must_equal nil
+      assert_nil auth.auth_meta_data.reset_password_token
+      assert_nil auth.auth_meta_data.reset_password_expire_at
 
       auth.digest_reset_password!("secret: TRB reset password!", "now + 1 hour")
       auth.auth_meta_data.reset_password_token.must_equal "secret: TRB reset password!"
@@ -93,8 +93,8 @@ class AuthenticatableTest < MiniTest::Spec
   describe '#reset_password_expired!' do
     it do
       auth = Authenticatable.new(User.new)
-      auth.auth_meta_data.reset_password_token.must_equal nil
-      auth.auth_meta_data.reset_password_expire_at.must_equal nil
+      assert_nil auth.auth_meta_data.reset_password_token
+      assert_nil auth.auth_meta_data.reset_password_expire_at
 
       auth.digest_reset_password!("secret: TRB reset password!", "now + 1 hour")
 
