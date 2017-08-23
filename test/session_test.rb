@@ -4,7 +4,7 @@ class SessionTest < MiniTest::Spec
   it 'successfully create session without scope' do
     session = Tyrant::Session.new(warden)
 
-    session.current_user.must_equal nil
+    assert_nil session.current_user
     assert ! session.signed_in?
 
     session.sign_in!(Object)
@@ -14,14 +14,14 @@ class SessionTest < MiniTest::Spec
 
     session.sign_out!
 
-    session.current_user.must_equal nil
+    assert_nil session.current_user
     assert ! session.signed_in?
   end
 
   it 'successfully create session with scope' do
     session = Tyrant::Session.new(warden)
 
-    session.current_user(scope: :user).must_equal nil
+    assert_nil session.current_user(scope: :user)
     assert ! session.signed_in?(scope: :user)
 
     session.sign_in!(Object, scope: :user)
@@ -31,7 +31,7 @@ class SessionTest < MiniTest::Spec
 
     session.sign_out!(scope: :user)
 
-    session.current_user(scope: :user).must_equal nil
+    assert_nil session.current_user(scope: :user)
     assert ! session.signed_in?(scope: :user)
   end
 
@@ -41,9 +41,9 @@ class SessionTest < MiniTest::Spec
     user = Object.new
     admin = Object.new
 
-    session.current_user(scope: :user).must_equal nil
+    assert_nil session.current_user(scope: :user)
     assert ! session.signed_in?(scope: :user)
-    session.current_user(scope: :admin).must_equal nil
+    assert_nil session.current_user(scope: :admin)
     assert ! session.signed_in?(scope: :admin)
 
     session.sign_in!(user, scope: :user)
@@ -56,11 +56,11 @@ class SessionTest < MiniTest::Spec
 
     session.sign_out!(scope: :user)
     assert session.signed_in?(scope: :admin)
-    session.current_user(scope: :user).must_equal nil
+    assert_nil session.current_user(scope: :user)
     assert ! session.signed_in?(scope: :user)
 
     session.sign_out!(scope: :admin)
-    session.current_user(scope: :admin).must_equal nil
+    assert_nil session.current_user(scope: :admin)
     assert ! session.signed_in?(scope: :admin)
   end
 
@@ -75,7 +75,7 @@ class SessionTest < MiniTest::Spec
 
     session.sign_out!
     assert session.signed_in?(scope: :user)
-    session.current_user.must_equal nil
+    assert_nil session.current_user
     assert ! session.signed_in?
   end
 end

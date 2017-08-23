@@ -37,3 +37,7 @@ end
 # load features
 
 require "tyrant/sign_up"
+require "tyrant/mailer"
+require "tyrant/reset_password"
+require "tyrant/change_password"
+

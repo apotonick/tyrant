@@ -36,10 +36,10 @@ class ChangePasswordTest < MiniTest::Spec
     res = Tyrant::ChangePassword.({email: "wrongpassword@trb.org", password: "123123", new_password: "123123", confirm_new_password: "different"})
 
     res.failure?.must_equal true
-    res["result.contract.default"].errors.messages.inspect.must_equal "{:new_password=>[\"New password can't match the old one\"], :confirm_new_password=>[\"The New Password is not matching\"]}"
+    res["result.contract.default"].errors.messages.inspect.must_equal "{:new_password=>[\"New password can't match the old one\"], :confirm_new_password=>[\"Passwords are not matching\"]}"
   end
 
-  it "false policy" do 
+  it "false policy" do
     user1 = Tyrant::SignUp::Confirmed.(
       email: "user1@trb.org",
       password: "123123",
@@ -63,9 +63,9 @@ class ChangePasswordTest < MiniTest::Spec
     RaiseNoError = -> {}
 
     #user2 trying to change password
-    res = Tyrant::ChangePassword.({ email: "user1@trb.org", 
-                                    password: "123123", 
-                                    new_password: "NewPassword", 
+    res = Tyrant::ChangePassword.({ email: "user1@trb.org",
+                                    password: "123123",
+                                    new_password: "NewPassword",
                                     confirm_new_password: "NewPassword"},
                                    "current_user" => user2["model"])
 
@@ -89,9 +89,9 @@ class ChangePasswordTest < MiniTest::Spec
     Tyrant::Authenticatable.new(user["model"]).confirmed?.must_equal true
     Tyrant::Authenticatable.new(user["model"]).confirmable?.must_equal false
 
-    res = Tyrant::ChangePassword.({ email: "change@trb.org", 
-                                    password: "123123", 
-                                    new_password: "NewPassword", 
+    res = Tyrant::ChangePassword.({ email: "change@trb.org",
+                                    password: "123123",
+                                    new_password: "NewPassword",
                                     confirm_new_password: "NewPassword"},
                                    "current_user" => user["model"])
 
