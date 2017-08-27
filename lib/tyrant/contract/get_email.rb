@@ -2,14 +2,14 @@ require 'reform'
 require 'reform/form/dry'
 
 module Tyrant::Contract
-  class GetEmail < Reform::Form 
+  class GetEmail < Reform::Form
     feature Reform::Form::Dry
 
     property :email, virtual: true
 
     validation with: { form: true } do
       configure do
-        config.messages_file = './config/error_messages.yml'
+        config.messages_file = File.join(File.dirname(__FILE__), "../config/error_messages.yml")
 
         def user_exists?
           return User.find_by(email: form.email) != nil

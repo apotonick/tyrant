@@ -7,11 +7,11 @@ module Tyrant
       Warden::Manager.serialize_into_session do |record|
         # Complex object should not be stored in session. Only the class name,
         # that will be use to reconstitute the user, is stored
-        { model: record.class.name, id: record.id }
+        Tyrant::Serializer.new(record).serialize_into
       end
 
       Warden::Manager.serialize_from_session do |record|
-        record['model'].constantize.find_by(id: record['id']) # Session.sign_in!(user) or something!
+        Tyrant::Serializer.new(record).serialize_from
       end
     end
   end
