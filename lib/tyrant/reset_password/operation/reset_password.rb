@@ -1,11 +1,14 @@
-require 'trailblazer'
-require 'tyrant/operation/mailer'
-require 'tyrant/operation/get_email'
+require 'tyrant/mailer/operation/mailer'
 
 module Tyrant
   class ResetPassword < Trailblazer::Operation
-    step Nested(Tyrant::GetEmail)
-    step Trailblazer::Operation::Contract::Validate()
+
+    class GetEmail < Trailblazer::Operation
+      step Contract::Build(constant: Form::GetEmail)
+    end
+
+    step Nested(GetEmail)
+    step Contract::Validate()
     failure :show_errors!, fails_fast: true
     step :model!
     step :generate_password!
